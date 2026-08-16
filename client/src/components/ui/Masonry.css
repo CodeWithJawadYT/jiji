@@ -1,0 +1,18 @@
+/* JawyXDevs style: dark editorial project tiles, electric-blue metadata, and restrained cinematic hover depth. */
+.masonry-list { position: relative; width: 100%; min-height: 300px; }
+.masonry-item { position: absolute; top: 0; left: 0; display: block; overflow: hidden; padding: 7px; cursor: pointer; will-change: transform, width, height, opacity, filter; transform-origin: center center; color: white; }
+.masonry-item::after { content: ''; position: absolute; inset: 7px; z-index: 3; pointer-events: none; border: 1px solid rgba(255,255,255,.12); transition: border-color .35s ease, inset .35s ease; }
+.masonry-item:hover::after, .masonry-item:focus-visible::after { inset: 13px; border-color: rgba(21,157,255,.62); }
+.masonry-image, .masonry-shade { position: absolute; inset: 7px; }
+.masonry-image { background-size: cover; background-position: center; filter: saturate(.7) contrast(1.12) brightness(.78); transform: scale(1.03); transition: transform .8s cubic-bezier(.23,1,.32,1), filter .55s ease; }
+.masonry-item:hover .masonry-image, .masonry-item:focus-visible .masonry-image { transform: scale(1.1); filter: saturate(1) contrast(1.14) brightness(.92); }
+.masonry-shade { z-index: 1; background: linear-gradient(180deg, rgba(0,0,0,.08) 18%, rgba(2,5,8,.88) 100%); transition: background .35s ease; }
+.masonry-item:hover .masonry-shade, .masonry-item:focus-visible .masonry-shade { background: linear-gradient(180deg, rgba(21,157,255,.03), rgba(2,5,8,.73) 100%); }
+.masonry-meta { position: absolute; z-index: 2; top: 22px; left: 23px; right: 23px; display: flex; justify-content: space-between; gap: 12px; color: rgba(239,247,252,.78); font: 9px 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+.masonry-meta b { color: var(--signal); font-weight: 400; }
+.masonry-meta small { color: rgba(219,231,239,.62); font-size: 8px; text-align: right; }
+.masonry-title { position: absolute; z-index: 2; left: 23px; right: 23px; bottom: 22px; display: flex; align-items: end; justify-content: space-between; gap: 12px; font-size: clamp(17px, 2vw, 27px); letter-spacing: -.055em; line-height: .95; text-transform: uppercase; }
+.masonry-title span { color: var(--signal); font: 17px 'IBM Plex Mono', monospace; transition: transform .3s ease; }
+.masonry-item:hover .masonry-title span, .masonry-item:focus-visible .masonry-title span { transform: translate(4px, -4px); }
+@media (max-width: 760px) { .masonry-item { padding: 5px; } .masonry-item::after, .masonry-image, .masonry-shade { inset: 5px; } .masonry-meta { top: 18px; left: 18px; right: 18px; } .masonry-title { left: 18px; right: 18px; bottom: 18px; font-size: 18px; } }
+@media (prefers-reduced-motion: reduce) { .masonry-image, .masonry-title span, .masonry-item::after { transition: none; } }
