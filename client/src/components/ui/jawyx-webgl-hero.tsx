@@ -78,7 +78,7 @@ export function JawyxWebGLHero() {
       raf: 0,
       disposed: false,
     };
-    refs.scene.fog = new THREE.FogExp2(0xc7dce8, mobile ? 0.00055 : 0.00028);
+    refs.scene.fog = new THREE.FogExp2(0xc7dce8, mobile ? 0.0004 : 0.00018);
     refs.camera.position.copy(refs.target);
 
     try {
@@ -124,46 +124,31 @@ export function JawyxWebGLHero() {
 
     const createSnowfall = () => { const count = mobile ? 150 : 520; const positions = new Float32Array(count * 3); const sizes = new Float32Array(count); for (let i = 0; i < count; i += 1) { positions[i * 3] = (Math.random() - .5) * 980; positions[i * 3 + 1] = Math.random() * 360 - 80; positions[i * 3 + 2] = 260 - Math.random() * 2900; sizes[i] = .8 + Math.random() * 1.7; } const geometry = new THREE.BufferGeometry(); geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1)); const material = new THREE.PointsMaterial({ color: 0xf5fbff, size: mobile ? 1.8 : 2.4, transparent: true, opacity: .62, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }); refs.snow = new THREE.Points(geometry, material); refs.scene.add(refs.snow); };
     const createTerrain = () => {
-      const width = mobile ? 1200 : 1900;
-      const depth = mobile ? 2700 : 4000;
-      const xSegments = mobile ? 34 : 62;
-      const zSegments = mobile ? 72 : 124;
-      const positions = new Float32Array((xSegments + 1) * (zSegments + 1) * 3);
+      const width = mobile ? 1500 : 2400;
+      const depth = mobile ? 2700 : 4100;
+      const xSegments = mobile ? 52 : 92;
+      const zSegments = mobile ? 104 : 188;
+      const cols = xSegments + 1;
+      const rows = zSegments + 1;
+      const positions = new Float32Array(cols * rows * 3);
+      const colors = new Float32Array(cols * rows * 3);
       const indices: number[] = [];
-      for (let z = 0; z <= zSegments; z += 1) {
-        const nz = z / zSegments;
-        for (let x = 0; x <= xSegments; x += 1) {
-          const nx = x / xSegments - 0.5;
-          const index = (z * (xSegments + 1) + x) * 3;
-          const worldZ = 360 - nz * depth;
-          const valley = Math.abs(nx) * 125;
-          const rock = Math.sin(worldZ * 0.012 + nx * 7) * 18 + Math.cos(worldZ * 0.025 - nx * 5) * 12 + Math.sin(worldZ * 0.055 + nx * 12) * 7;
-          positions[index] = nx * width;
-          positions[index + 1] = -112 + valley + rock;
-          positions[index + 2] = worldZ;
-        }
-      }
-      for (let z = 0; z < zSegments; z += 1) for (let x = 0; x < xSegments; x += 1) { const a = z * (xSegments + 1) + x; const b = a + 1; const c = a + xSegments + 1; const d = c + 1; indices.push(a, c, b, b, c, d); }
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      geometry.setIndex(indices); geometry.computeVertexNormals();
-      const material = new THREE.MeshStandardMaterial({ color: 0xeaf4f8, metalness: 0.28, roughness: 0.82, emissive: 0x8eacc4, emissiveIntensity: 0.28, flatShading: true, side: THREE.DoubleSide });
+      const smooth = (value: number) => value * value * (3 - 2 * value);
+      const hash = (x: number, z: number) => { const n = Math.sin(x * 127.1 + z * 311.7) * 43758.5453; return n - Math.floor(n); };
+      const noise = (x: number, z: number) => { const x0 = Math.floor(x); const z0 = Math.floor(z); const tx = smooth(x - x0); const tz = smooth(z - z0); const a = hash(x0, z0); const b = hash(x0 + 1, z0); const c = hash(x0, z0 + 1); const d = hash(x0 + 1, z0 + 1); return THREE.MathUtils.lerp(THREE.MathUtils.lerp(a, b, tx), THREE.MathUtils.lerp(c, d, tx), tz) * 2 - 1; };
+      const alpineHeight = (nx: number, nz: number) => { const broad = (noise(nx * 2.1, nz * 1.2) * .5 + noise(nx * 4.8, nz * 2.8) * .27 + noise(nx * 10.5, nz * 6.2) * .12); const ridged = 1 - Math.abs(noise(nx * 5.2 + 2, nz * 3.1 - 1)); const peakA = Math.exp(-((nx + .18) ** 2 * 8 + (nz - .16) ** 2 * 7)) * 155; const peakB = Math.exp(-((nx - .26) ** 2 * 13 + (nz + .05) ** 2 * 10)) * 125; const peakC = Math.exp(-((nx + .38) ** 2 * 18 + (nz + .34) ** 2 * 16)) * 92; const glacialBowl = -Math.exp(-((nx - .02) ** 2 * 8 + (nz - .42) ** 2 * 8)) * 42; return -112 + broad * 48 + ridged * 24 + peakA + peakB + peakC + glacialBowl; };
+      const snowColor = new THREE.Color(0xf7fbfc); const blueSnow = new THREE.Color(0xc0d8e5); const rockColor = new THREE.Color(0x718b9a); const darkRock = new THREE.Color(0x344b59); const mixColor = (a: THREE.Color, b: THREE.Color, amount: number) => a.clone().lerp(b, amount);
+      for (let z = 0; z <= zSegments; z += 1) { const nz = z / zSegments; for (let x = 0; x <= xSegments; x += 1) { const nx = x / xSegments - .5; const index = (z * cols + x) * 3; const height = alpineHeight(nx, nz); const left = alpineHeight(nx - .008, nz); const right = alpineHeight(nx + .008, nz); const front = alpineHeight(nx, nz - .008); const back = alpineHeight(nx, nz + .008); const slope = Math.min(1, Math.sqrt((right - left) ** 2 + (back - front) ** 2) / 30); const snowLine = -78 + noise(nx * 3.4, nz * 2.2) * 14; const snowAmount = THREE.MathUtils.clamp((height - snowLine) / 112 + (1 - slope) * .38 + noise(nx * 8, nz * 9) * .12, 0, 1); const base = mixColor(darkRock, rockColor, THREE.MathUtils.clamp(height / 95 + .35, 0, 1)); const shade = mixColor(base, blueSnow, snowAmount * .68); const finalColor = mixColor(shade, snowColor, snowAmount * snowAmount * .72); positions[index] = nx * width; positions[index + 1] = height; positions[index + 2] = 360 - nz * depth; colors[index] = finalColor.r; colors[index + 1] = finalColor.g; colors[index + 2] = finalColor.b; } }
+      for (let z = 0; z < zSegments; z += 1) for (let x = 0; x < xSegments; x += 1) { const a = z * cols + x; const b = a + 1; const c = a + cols; const d = c + 1; indices.push(a, c, b, b, c, d); }
+      const geometry = new THREE.BufferGeometry(); geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3)); geometry.setIndex(indices); geometry.computeVertexNormals();
+      const material = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: .1, roughness: .92, flatShading: false, side: THREE.DoubleSide });
       const mesh = new THREE.Mesh(geometry, material); refs.scene.add(mesh); refs.terrain.push(mesh);
-
-      const ridge = (side: number, color: number, opacity: number, scale: number) => {
-        const points: THREE.Vector2[] = [];
-        for (let i = 0; i <= 36; i += 1) { const t = i / 36; const x = side * (230 + t * 560); const y = -52 + Math.sin(t * 12 + side) * 74 + Math.sin(t * 28) * 24; points.push(new THREE.Vector2(x, y)); }
-        points.push(new THREE.Vector2(side * 1000, -220), new THREE.Vector2(side * 200, -220));
-        const ridgeGeometry = new THREE.ShapeGeometry(new THREE.Shape(points));
-        const ridgeMaterial = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, side: THREE.DoubleSide, depthWrite: false });
-        const ridgeMesh = new THREE.Mesh(ridgeGeometry, ridgeMaterial); ridgeMesh.position.z = -180; ridgeMesh.scale.setScalar(scale); refs.scene.add(ridgeMesh); refs.terrain.push(ridgeMesh);
-      };
-      ridge(-1, 0xeaf4f8, 0.96, 1.4); ridge(1, 0xc5dce8, 0.9, 1.25); ridge(-1, 0xa8c9dc, 0.52, 1.05); ridge(1, 0x82abc5, 0.42, 1.02);
+      const createLayer = (scale: number, z: number, tint: number, opacity: number, seed: number) => { const shape: THREE.Vector2[] = []; for (let i = 0; i <= 52; i += 1) { const t = i / 52; const x = (t - .5) * 1500 * scale; const y = -72 + noise(t * 7 + seed, seed) * 48 + Math.sin(t * 10 + seed) * 32 + Math.pow(Math.sin(t * Math.PI), 1.5) * 85; shape.push(new THREE.Vector2(x, y)); } shape.push(new THREE.Vector2(1600 * scale, -250), new THREE.Vector2(-1600 * scale, -250)); const layerGeometry = new THREE.ShapeGeometry(new THREE.Shape(shape)); const layerMaterial = new THREE.MeshStandardMaterial({ color: tint, transparent: true, opacity, roughness: .98, metalness: .05, side: THREE.DoubleSide, depthWrite: false }); const layer = new THREE.Mesh(layerGeometry, layerMaterial); layer.position.z = z; refs.scene.add(layer); refs.terrain.push(layer); };
+      createLayer(1.28, -220, 0x9db8c8, .78, 3); createLayer(1.55, -520, 0x718fa3, .58, 7); createLayer(1.9, -980, 0x4f6c7d, .38, 13);
     };
-
     const createAtmosphere = () => {
       const geometry = new THREE.SphereGeometry(mobile ? 360 : 560, mobile ? 22 : 36, mobile ? 16 : 24);
-      const material = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 } }, vertexShader: `varying vec3 n; void main(){n=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`, fragmentShader: `varying vec3 n; uniform float time; void main(){float edge=pow(.72-dot(n,vec3(0.,0.,1.)),2.3); float pulse=.88+sin(time*1.5)*.08; vec3 c=vec3(.22,.62,1.)*edge*pulse; gl_FragColor=vec4(c,edge*.25);}`, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+      const material = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 } }, vertexShader: `varying vec3 n; void main(){n=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`, fragmentShader: `varying vec3 n; uniform float time; void main(){float edge=pow(.72-dot(n,vec3(0.,0.,1.)),2.3); float pulse=.88+sin(time*1.5)*.08; vec3 c=vec3(.18,.5,.86)*edge*pulse; gl_FragColor=vec4(c,edge*.18);}`, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
       refs.atmosphere = new THREE.Mesh(geometry, material); refs.atmosphere.position.set(210, 55, -720); refs.scene.add(refs.atmosphere);
       const nebulaGeometry = new THREE.PlaneGeometry(1600, 900, 32, 18);
       const nebulaMaterial = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 }, colorA: { value: new THREE.Color(0x02152a) }, colorB: { value: new THREE.Color(0x159dff) } }, vertexShader: `varying vec2 uv0; uniform float time; void main(){uv0=uv; vec3 p=position; p.z+=sin(p.x*.012+time*.4)*18.; gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`, fragmentShader: `varying vec2 uv0; uniform vec3 colorA; uniform vec3 colorB; uniform float time; void main(){float f=sin(uv0.x*8.+time)*cos(uv0.y*7.-time*.4)*.5+.5; float e=1.-smoothstep(.05,.78,length(uv0-.5)); gl_FragColor=vec4(mix(colorA,colorB,f),e*.16);}`, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -187,9 +172,9 @@ export function JawyxWebGLHero() {
     };
 
     createStars(); createSnowfall(); createTerrain(); createAtmosphere(); createStructures();
-    const blue = new THREE.PointLight(0x8ed8ff, 5.5, 780); blue.position.set(180, 120, -320); refs.scene.add(blue);
-    const silver = new THREE.PointLight(0xf4fbff, 4.2, 540); silver.position.set(-180, 160, 80); refs.scene.add(silver);
-    refs.scene.add(new THREE.AmbientLight(0xb8d4e3, 1.55));
+    const blue = new THREE.PointLight(0x8ed8ff, 3.8, 780); blue.position.set(180, 120, -320); refs.scene.add(blue);
+    const silver = new THREE.PointLight(0xf4fbff, 3.2, 540); silver.position.set(-180, 160, 80); refs.scene.add(silver);
+    refs.scene.add(new THREE.AmbientLight(0xb8d4e3, 1.2));
 
     const pointer = { x: 0, y: 0 };
     const onPointer = (event: PointerEvent) => { if (!mobile) { pointer.x = (event.clientX / window.innerWidth - 0.5) * 2; pointer.y = (event.clientY / window.innerHeight - 0.5) * 2; } };

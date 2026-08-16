@@ -1,7 +1,8 @@
-# Snowy Mountain Focused Update
+# Realistic Alpine Terrain Upgrade
 
-- [x] Audit the current decorative scene text and mountain material setup.
-- [x] Make decorative scene text fade out smoothly when scrolling begins.
-- [x] Convert terrain and mountain layers to white snow with icy-blue shadows.
-- [x] Add subtle snowfall, soft mist, and cinematic snowy lighting without changing the camera journey.
-- [x] Verify desktop/mobile rendering, build health, and save a checkpoint.
+- [x] Audit the current terrain geometry, snow coverage, and lighting limitations.
+- [x] Replace the low-poly terrain with detailed heightmap-style alpine geometry and layered rock/snow materials.
+- [x] Add natural ridge variation, erosion detail, uneven snow accumulation, and multi-layer depth.
+- [x] Tune cold daylight lighting, atmospheric perspective, fog/mist, and restrained snowfall.
+- [x] Optimize desktop/mobile geometry and verify the existing camera journey and UI remain unchanged.
+- [x] Save and deliver the updated checkpoint.
