@@ -1,7 +1,6 @@
-# New Hero Background Integration
+# Dark Visible Antigravity Tuning
 
-- [x] Read pasted_content_15.txt and identify the hero background implementation.
-- [x] Replace only the current ScrollExpand artwork/background layer.
-- [x] Preserve JawyXDevs branding, black treatment, PixelTrail, zoom behavior, layout, sections, projects, pricing, navigation, and scroll structure.
-- [x] Verify desktop/mobile rendering, build health, and runtime logs.
-- [x] Save and deliver the updated checkpoint.
+- [ ] Increase Antigravity visibility with darker blue-gray color, stronger contrast, and controlled opacity.
+- [ ] Keep the effect cinematic and subordinate to the existing JawyXDevs typography and controls.
+- [ ] Verify desktop/mobile rendering and build/runtime health.
+- [ ] Save and deliver the updated checkpoint.
