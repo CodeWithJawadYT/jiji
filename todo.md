@@ -1,6 +1,6 @@
-# Dark Visible Antigravity Tuning
+# Hero Effect Color Update
 
-- [ ] Increase Antigravity visibility with darker blue-gray color, stronger contrast, and controlled opacity.
-- [ ] Keep the effect cinematic and subordinate to the existing JawyXDevs typography and controls.
-- [ ] Verify desktop/mobile rendering and build/runtime health.
+- [ ] Set PixelTrail color to #5227FF.
+- [ ] Set Antigravity particles to white with clear visibility over the black hero.
+- [ ] Verify desktop and mobile contrast without disturbing typography or layout.
 - [ ] Save and deliver the updated checkpoint.
