@@ -172,3 +172,30 @@ h2 { font-size: clamp(48px, 7.3vw, 106px); line-height: .92; letter-spacing: -.0
 .cosmos-meta i { margin-left: 24px; color: #98a7b3; font-style: normal; }
 @media (max-width: 700px) { .hero-container.cosmos-style { min-height: 780px; height: 780px; } .side-menu { top: 37px; left: 22px; transform: none; } .side-menu img { width: 38px; height: 38px; transform: none; } .vertical-text { font-size: 8px; } .cosmos-content { left: 22px; top: 47%; width: calc(100% - 44px); transform: translateY(-43%); } .hero-kicker { margin-bottom: 20px; font-size: 8px; letter-spacing: .15em; } .hero-title { font-size: clamp(36px, 10.4vw, 52px); line-height: .9; letter-spacing: -.082em; } .title-word { white-space: normal; } .hero-subtitle { margin-top: 22px; font-size: 12px; max-width: 340px; } .codebase-actions { flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 24px; } .scroll-progress { right: 22px; bottom: 24px; gap: 7px; font-size: 8px; } .progress-track { width: 58px; } .cosmos-meta { left: 22px; bottom: 24px; font-size: 8px; } .cosmos-meta i { display: none; } }
 @media (prefers-reduced-motion: reduce) { .title-char { opacity: 1 !important; transform: none !important; } }
+
+/* JawyXDevs mountain journey: summit-first composition with the WebGL terrain as the narrative layer. */
+.mountain-journey { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #02060c; }
+.mountain-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mountain-journey::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 70% 35%, rgba(21,157,255,.11), transparent 31%), linear-gradient(90deg, rgba(2,5,9,.72), transparent 64%), linear-gradient(180deg, rgba(2,5,9,.06), rgba(2,5,9,.54)); }
+.mountain-side { position: absolute; z-index: 3; top: 50%; left: clamp(20px, 3.5vw, 58px); display: flex; align-items: center; gap: 12px; transform: translateY(-50%) rotate(-90deg); transform-origin: left center; color: rgba(220,232,241,.65); font: 9px 'IBM Plex Mono', monospace; letter-spacing: .2em; white-space: nowrap; text-transform: uppercase; }
+.mountain-side img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; transform: rotate(90deg); box-shadow: 0 0 0 1px rgba(21,157,255,.4), 0 0 22px rgba(21,157,255,.15); }
+.mountain-copy { position: absolute; z-index: 3; left: clamp(58px, 10vw, 160px); top: 50%; width: min(960px, 78vw); transform: translateY(-47%); }
+.mountain-kicker { display: flex; align-items: center; gap: 11px; margin: 0 0 24px; color: var(--signal); font: 10px 'IBM Plex Mono', monospace; letter-spacing: .2em; text-transform: uppercase; }
+.mountain-kicker::before { content: ''; width: 30px; height: 1px; background: var(--signal); }
+.mountain-copy h1 { max-width: 960px; margin: 0; color: #f0f6f9; font-size: clamp(44px, 6.3vw, 101px); line-height: .88; letter-spacing: -.09em; font-weight: 600; text-transform: uppercase; }
+.mountain-title-word { display: inline-block; white-space: nowrap; }
+.mountain-title-char { display: inline-block; will-change: transform, opacity; }
+.mountain-word-1 .mountain-title-char, .mountain-word-4 .mountain-title-char, .mountain-word-7 .mountain-title-char { color: transparent; -webkit-text-stroke: 1px rgba(226,235,242,.8); }
+.mountain-word-2 .mountain-title-char, .mountain-word-5 .mountain-title-char, .mountain-word-8 .mountain-title-char { color: #eef5f8; }
+.mountain-title-space { display: inline-block; }
+.mountain-subtitle { margin-top: 28px; color: #aab7c1; font-size: 14px; line-height: 1.55; }
+.mountain-subtitle-line { margin: 0; }
+.mountain-actions { display: flex; gap: 11px; margin-top: 26px; pointer-events: auto; }
+.mountain-progress { position: absolute; z-index: 4; right: clamp(22px, 5vw, 80px); bottom: 28px; display: flex; align-items: center; gap: 12px; color: #95a4b0; font: 9px 'IBM Plex Mono', monospace; letter-spacing: .15em; text-transform: uppercase; }
+.mountain-progress i { width: 108px; height: 1px; overflow: hidden; background: rgba(218,231,240,.22); }
+.mountain-progress b { display: block; height: 100%; background: var(--signal); transition: width .2s linear; }
+.mountain-progress strong { color: #e1ebf1; font-weight: 400; }
+.mountain-meta { position: absolute; z-index: 4; left: clamp(22px, 5vw, 80px); bottom: 28px; color: #758692; font: 9px 'IBM Plex Mono', monospace; letter-spacing: .15em; text-transform: uppercase; }
+.mountain-meta span { margin-left: 25px; color: #97a6b0; }
+@media (max-width: 700px) { .mountain-journey { min-height: 780px; } .mountain-side { top: 36px; left: 22px; transform: none; } .mountain-side img { width: 38px; height: 38px; transform: none; } .mountain-side span { font-size: 8px; } .mountain-copy { left: 22px; top: 47%; width: calc(100% - 44px); transform: translateY(-43%); } .mountain-kicker { margin-bottom: 18px; font-size: 8px; letter-spacing: .14em; } .mountain-copy h1 { font-size: clamp(35px, 10.3vw, 51px); line-height: .9; letter-spacing: -.08em; } .mountain-title-word { white-space: normal; } .mountain-subtitle { margin-top: 22px; max-width: 335px; font-size: 12px; } .mountain-actions { flex-direction: column; align-items: flex-start; gap: 10px; } .mountain-progress { right: 22px; bottom: 23px; gap: 7px; font-size: 8px; } .mountain-progress i { width: 58px; } .mountain-meta { left: 22px; bottom: 23px; font-size: 8px; } .mountain-meta span { display: none; } }
+@media (prefers-reduced-motion: reduce) { .mountain-title-char { opacity: 1 !important; transform: none !important; } }
