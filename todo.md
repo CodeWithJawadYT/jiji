@@ -1,6 +1,6 @@
-# GitHub Pages Route Repair
+# Project Link Behavior
 
-- [ ] Inspect Wouter routing and the /jiji/ repository-path behavior.
-- [ ] Add GitHub Pages base-path compatibility without breaking Manus hosting.
-- [ ] Build and verify /jiji/ opens the JawyXDevs home experience.
-- [ ] Save and deliver the route repair.
+- [ ] Inspect all featured and Masonry project link renderers.
+- [ ] Add target=_blank and rel=noopener noreferrer to live project actions.
+- [ ] Verify every real project URL and run the production build.
+- [ ] Save and deliver the link behavior update.

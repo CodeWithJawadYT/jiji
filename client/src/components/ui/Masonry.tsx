@@ -158,7 +158,7 @@ export default function Masonry({
           className="masonry-item"
           href={item.url}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           onMouseEnter={() => hover(item.id, true)}
           onMouseLeave={() => hover(item.id, false)}
           onFocus={() => hover(item.id, true)}
