@@ -1,0 +1,10 @@
+/* JawyXDevs style: ScrollExpand is a quiet cinematic frame reveal behind the existing hero. */
+.scroll-expand-hero { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.scroll-expand-hero__frame { position: absolute; inset: 0; clip-path: inset(18% 24% 18% 24% round 24px); will-change: clip-path; overflow: hidden; opacity: .09; }
+.scroll-expand-hero__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.14) brightness(.48) sepia(.16) hue-rotate(168deg); transform: scale(1.32); transform-origin: center; will-change: transform; }
+.scroll-expand-hero__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.28), rgba(2,13,24,.68) 54%, rgba(0,0,0,.96)); opacity: 0; }
+.scroll-expand-hero__title { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 0 6%; color: rgba(255,255,255,.9); font-size: clamp(2rem,7.5vw,5.25rem); font-weight: 700; letter-spacing: -.04em; line-height: .98; text-align: center; text-shadow: 0 2px 26px rgba(0,0,0,.52); will-change: opacity, transform; }
+.scroll-expand-hero__hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 3; color: rgba(220,236,248,.56); font-size: .7rem; letter-spacing: .2em; text-align: center; text-transform: uppercase; will-change: opacity, transform; }
+.scroll-expand-hero__overlay { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: translate3d(0,18px,0); color: white; text-align: center; }
+@media (max-width: 700px) { .scroll-expand-hero__frame { clip-path: inset(17% 8% 17% 8% round 18px); opacity: .07; } .scroll-expand-hero__media { filter: grayscale(1) contrast(1.08) brightness(.36) sepia(.12) hue-rotate(168deg); } .scroll-expand-hero__hint { bottom: 1rem; font-size: .58rem; } }
+@media (prefers-reduced-motion: reduce) { .scroll-expand-hero__frame { clip-path: inset(0 round 0); opacity: .08; } .scroll-expand-hero__title, .scroll-expand-hero__hint { display: none; } }

@@ -1,7 +1,7 @@
-# PixelTrail Cursor Integration
+# ScrollExpand Zoom Integration
 
-- [x] Map the attached PixelTrail shader into the existing black hero without changing page structure.
-- [x] Implement a subtle blue-white pixel trail with pointer tracking and low-power rendering.
-- [x] Preserve the pure-black background, existing UI, sections, projects, pricing, navigation, and scroll behavior.
-- [x] Verify desktop/mobile interaction, build health, and runtime logs.
+- [x] Map the attached ScrollExpand behavior into the existing hero without changing page structure.
+- [x] Implement a branded scroll-driven frame expansion and media zoom stage.
+- [x] Preserve the pure-black background, PixelTrail, logo, typography, sections, projects, pricing, navigation, and existing scroll journey.
+- [x] Verify desktop/mobile scroll behavior, build health, and runtime logs.
 - [x] Save and deliver the updated checkpoint.
