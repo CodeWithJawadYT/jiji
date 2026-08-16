@@ -1,8 +1,8 @@
-# Realistic Alpine Mountain Replacement
+# Cinematic Alpine Environment Replacement
 
-- [x] Audit the current mountain-only implementation and preserve the existing camera/UI boundary.
-- [x] Replace the current procedural terrain with denser layered heightmap-style alpine geometry.
-- [x] Improve rock/snow material variation, sharp ridge silhouettes, and natural erosion detail.
-- [x] Add cinematic cold lighting, realistic shadows, atmospheric depth, and inter-mountain mist.
-- [x] Verify the existing UI, scroll camera journey, projects, pricing, and mobile path remain unchanged.
+- [x] Audit the current mountain-only scene and preserve the existing site/UI/camera boundary.
+- [x] Replace the current mountain concept with massive snowy peaks, deep valleys, rocky cliffs, and multiple distant layers.
+- [x] Add natural snow/rock shading, realistic shadows, soft cloud/mist depth, and cold cinematic daylight.
+- [x] Strengthen the scroll camera path so it flies through the alpine environment instead of only descending over it.
+- [x] Verify projects, pricing, UI, mobile behavior, Three.js architecture, and runtime health remain intact.
 - [x] Save and deliver the updated checkpoint.

@@ -51,14 +51,15 @@ export function JawyxWebGLHero() {
     if (!mount || !canvas) return;
     const mobile = window.matchMedia("(max-width: 700px)").matches;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const endZ = mobile ? -2350 : -3250;
+    const endZ = mobile ? -2700 : -3800;
     const path = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, 112, 300),
-      new THREE.Vector3(92, 88, -170),
-      new THREE.Vector3(-126, 42, -760),
-      new THREE.Vector3(145, -10, -1480),
-      new THREE.Vector3(-86, -58, -2260),
-      new THREE.Vector3(0, -82, endZ),
+      new THREE.Vector3(0, 148, 360),
+      new THREE.Vector3(180, 120, -120),
+      new THREE.Vector3(-220, 76, -720),
+      new THREE.Vector3(260, 18, -1420),
+      new THREE.Vector3(-190, -56, -2220),
+      new THREE.Vector3(155, -108, -2940),
+      new THREE.Vector3(0, -138, endZ),
     ], false, "catmullrom", 0.55);
     const refs: JourneyRefs = {
       scene: new THREE.Scene(),
@@ -73,7 +74,7 @@ export function JawyxWebGLHero() {
       nebula: null,
       path,
       target: path.getPointAt(0),
-      lookTarget: path.getPointAt(0.03),
+      lookTarget: path.getPointAt(0.065),
       scrollTrigger: null,
       raf: 0,
       disposed: false,
@@ -126,8 +127,8 @@ export function JawyxWebGLHero() {
     const createTerrain = () => {
       const width = mobile ? 1500 : 2400;
       const depth = mobile ? 2700 : 4100;
-      const xSegments = mobile ? 52 : 92;
-      const zSegments = mobile ? 104 : 188;
+      const xSegments = mobile ? 60 : 112;
+      const zSegments = mobile ? 118 : 226;
       const cols = xSegments + 1;
       const rows = zSegments + 1;
       const positions = new Float32Array(cols * rows * 3);
@@ -136,12 +137,12 @@ export function JawyxWebGLHero() {
       const smooth = (value: number) => value * value * (3 - 2 * value);
       const hash = (x: number, z: number) => { const n = Math.sin(x * 127.1 + z * 311.7) * 43758.5453; return n - Math.floor(n); };
       const noise = (x: number, z: number) => { const x0 = Math.floor(x); const z0 = Math.floor(z); const tx = smooth(x - x0); const tz = smooth(z - z0); const a = hash(x0, z0); const b = hash(x0 + 1, z0); const c = hash(x0, z0 + 1); const d = hash(x0 + 1, z0 + 1); return THREE.MathUtils.lerp(THREE.MathUtils.lerp(a, b, tx), THREE.MathUtils.lerp(c, d, tx), tz) * 2 - 1; };
-      const alpineHeight = (nx: number, nz: number) => { const broad = (noise(nx * 2.1, nz * 1.2) * .5 + noise(nx * 4.8, nz * 2.8) * .27 + noise(nx * 10.5, nz * 6.2) * .12); const ridged = 1 - Math.abs(noise(nx * 5.2 + 2, nz * 3.1 - 1)); const peakA = Math.exp(-((nx + .18) ** 2 * 8 + (nz - .16) ** 2 * 7)) * 155; const peakB = Math.exp(-((nx - .26) ** 2 * 13 + (nz + .05) ** 2 * 10)) * 125; const peakC = Math.exp(-((nx + .38) ** 2 * 18 + (nz + .34) ** 2 * 16)) * 92; const glacialBowl = -Math.exp(-((nx - .02) ** 2 * 8 + (nz - .42) ** 2 * 8)) * 42; return -112 + broad * 48 + ridged * 24 + peakA + peakB + peakC + glacialBowl; };
+      const alpineHeight = (nx: number, nz: number) => { const macro = noise(nx * 1.8, nz * 1.05) * 34 + noise(nx * 3.8, nz * 2.2) * 18; const ridged = Math.pow(1 - Math.abs(noise(nx * 6.2 + 4, nz * 3.8 - 2)), 1.65) * 38; const crag = noise(nx * 16 + 8, nz * 11 - 4) * 11; const peakA = Math.exp(-((nx + .23) ** 2 * 15 + (nz - .08) ** 2 * 10)) * 260; const peakB = Math.exp(-((nx - .12) ** 2 * 24 + (nz + .18) ** 2 * 17)) * 205; const peakC = Math.exp(-((nx + .42) ** 2 * 30 + (nz + .34) ** 2 * 22)) * 170; const peakD = Math.exp(-((nx - .4) ** 2 * 36 + (nz - .36) ** 2 * 30)) * 130; const valley = -Math.exp(-((nx + .02) ** 2 * 18 + (nz - .26) ** 2 * 13)) * 96; const glacier = -Math.exp(-((nx - .2) ** 2 * 24 + (nz + .42) ** 2 * 18)) * 54; return -148 + macro + ridged + crag + peakA + peakB + peakC + peakD + valley + glacier; };
       const snowColor = new THREE.Color(0xf7fbfc); const blueSnow = new THREE.Color(0xc0d8e5); const rockColor = new THREE.Color(0x718b9a); const darkRock = new THREE.Color(0x344b59); const mixColor = (a: THREE.Color, b: THREE.Color, amount: number) => a.clone().lerp(b, amount);
       for (let z = 0; z <= zSegments; z += 1) { const nz = z / zSegments; for (let x = 0; x <= xSegments; x += 1) { const nx = x / xSegments - .5; const index = (z * cols + x) * 3; const height = alpineHeight(nx, nz); const left = alpineHeight(nx - .008, nz); const right = alpineHeight(nx + .008, nz); const front = alpineHeight(nx, nz - .008); const back = alpineHeight(nx, nz + .008); const slope = Math.min(1, Math.sqrt((right - left) ** 2 + (back - front) ** 2) / 30); const snowLine = -78 + noise(nx * 3.4, nz * 2.2) * 14; const snowAmount = THREE.MathUtils.clamp((height - snowLine) / 112 + (1 - slope) * .38 + noise(nx * 8, nz * 9) * .12, 0, 1); const base = mixColor(darkRock, rockColor, THREE.MathUtils.clamp(height / 95 + .35, 0, 1)); const shade = mixColor(base, blueSnow, snowAmount * .68); const finalColor = mixColor(shade, snowColor, snowAmount * snowAmount * .72); positions[index] = nx * width; positions[index + 1] = height; positions[index + 2] = 360 - nz * depth; colors[index] = finalColor.r; colors[index + 1] = finalColor.g; colors[index + 2] = finalColor.b; } }
       for (let z = 0; z < zSegments; z += 1) for (let x = 0; x < xSegments; x += 1) { const a = z * cols + x; const b = a + 1; const c = a + cols; const d = c + 1; indices.push(a, c, b, b, c, d); }
       const geometry = new THREE.BufferGeometry(); geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3)); geometry.setIndex(indices); geometry.computeVertexNormals();
-      const material = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: .1, roughness: .92, flatShading: false, side: THREE.DoubleSide });
+      const material = new THREE.MeshPhysicalMaterial({ vertexColors: true, metalness: .02, roughness: .96, clearcoat: .08, clearcoatRoughness: .84, flatShading: false, side: THREE.DoubleSide });
       const mesh = new THREE.Mesh(geometry, material); refs.scene.add(mesh); refs.terrain.push(mesh);
       const createDistantLayer = (scale: number, zOffset: number, seed: number, colorA: number, colorB: number) => {
         const layerX = mobile ? 38 : 58;
@@ -154,7 +155,7 @@ export function JawyxWebGLHero() {
         for (let z = 0; z <= layerZ; z += 1) { const nz = z / layerZ; for (let x = 0; x <= layerX; x += 1) { const nx = x / layerX - .5; const index = (z * layerCols + x) * 3; const mountain = Math.max(0, 1 - Math.abs(nx * 1.7 + layerNoise(nx * 2, nz) * .34)); const sharp = Math.pow(mountain, 1.8) * (58 + Math.abs(layerNoise(nx * 7, nz * 4)) * 45); const folds = layerNoise(nx * 9, nz * 3) * 15; vertices[index] = nx * 2300 * scale; vertices[index + 1] = -98 + sharp + folds; vertices[index + 2] = 180 - nz * 1500 + zOffset; const snow = THREE.MathUtils.clamp((vertices[index + 1] + 55) / 90 + (1 - Math.min(1, Math.abs(folds) / 15)) * .22, 0, 1); const c = colorDark.clone().lerp(colorLight, snow); vertexColors[index] = c.r; vertexColors[index + 1] = c.g; vertexColors[index + 2] = c.b; } }
         const layerIndices: number[] = []; for (let z = 0; z < layerZ; z += 1) for (let x = 0; x < layerX; x += 1) { const a = z * layerCols + x; const b = a + 1; const c = a + layerCols; const d = c + 1; layerIndices.push(a, c, b, b, c, d); }
         const layerGeometry = new THREE.BufferGeometry(); layerGeometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3)); layerGeometry.setAttribute("color", new THREE.BufferAttribute(vertexColors, 3)); layerGeometry.setIndex(layerIndices); layerGeometry.computeVertexNormals();
-        const layerMaterial = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .96, metalness: .04, transparent: true, opacity: .86, side: THREE.DoubleSide });
+        const layerMaterial = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: .98, metalness: .02, clearcoat: .05, clearcoatRoughness: .9, transparent: true, opacity: .9, side: THREE.DoubleSide });
         const layerMesh = new THREE.Mesh(layerGeometry, layerMaterial); refs.scene.add(layerMesh); refs.terrain.push(layerMesh);
       };
       createDistantLayer(1.18, -320, 4, 0x4e6673, 0xb8d0dc); createDistantLayer(1.52, -760, 11, 0x334b59, 0x8caab9); createDistantLayer(1.92, -1250, 19, 0x203743, 0x5f7d8c); const alpineBackdrop = new THREE.Mesh(new THREE.PlaneGeometry(3600, 1700, 1, 1), new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("/manus-storage/jawyx-alpine-distant-bg_85a8b8b1.png", texture => { texture.colorSpace = THREE.SRGBColorSpace; }), transparent: true, opacity: .72, depthWrite: false, fog: true })); alpineBackdrop.position.set(0, 180, -1680); refs.scene.add(alpineBackdrop); refs.terrain.push(alpineBackdrop);
@@ -192,7 +193,7 @@ export function JawyxWebGLHero() {
     const pointer = { x: 0, y: 0 };
     const onPointer = (event: PointerEvent) => { if (!mobile) { pointer.x = (event.clientX / window.innerWidth - 0.5) * 2; pointer.y = (event.clientY / window.innerHeight - 0.5) * 2; } };
     window.addEventListener("pointermove", onPointer, { passive: true });
-    const updateScroll = (value: number) => { const eased = value * value * (3 - 2 * value); refs.target.copy(refs.path.getPointAt(Math.min(0.999, eased))); refs.lookTarget.copy(refs.path.getPointAt(Math.min(0.999, eased + 0.035))); refs.camera.fov = THREE.MathUtils.lerp(70, mobile ? 54 : 38, value); refs.camera.updateProjectionMatrix(); setProgress(value); setSection(value < 0.25 ? 1 : value < 0.45 ? 2 : value < 0.65 ? 3 : value < 0.9 ? 4 : 5); };
+    const updateScroll = (value: number) => { const eased = value * value * (3 - 2 * value); refs.target.copy(refs.path.getPointAt(Math.min(0.999, eased))); refs.lookTarget.copy(refs.path.getPointAt(Math.min(0.999, eased + (mobile ? 0.055 : 0.08)))); refs.camera.fov = THREE.MathUtils.lerp(70, mobile ? 54 : 38, value); refs.camera.updateProjectionMatrix(); setProgress(value); setSection(value < 0.25 ? 1 : value < 0.45 ? 2 : value < 0.65 ? 3 : value < 0.9 ? 4 : 5); };
     refs.scrollTrigger = ScrollTrigger.create({ trigger: document.body, start: "top top", end: "bottom bottom", scrub: 1.05, onUpdate: self => updateScroll(self.progress) });
     updateScroll(0);
 
