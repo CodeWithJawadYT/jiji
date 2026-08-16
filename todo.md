@@ -1,7 +1,6 @@
-# MagicRings Background Integration
+# Pure Black Background Update
 
-- [x] Map the attached MagicRings shader into the existing JawyXDevs background architecture.
-- [x] Implement a branded electric-blue MagicRings layer with transparent compositing and mouse response.
-- [x] Preserve the existing snowy mountain, camera journey, UI, sections, projects, pricing, and navigation.
-- [x] Verify desktop/mobile rendering, WebGL fallback, build health, and runtime logs.
-- [x] Save and deliver the updated checkpoint.
+- [x] Remove the current mountain background layer from the hero scene.
+- [x] Remove the attached MagicRings background layer from the hero.
+- [x] Set the hero background to pure black without changing layout, content, navigation, or scroll structure.
+- [x] Verify desktop/mobile rendering and save the updated checkpoint.
