@@ -1,6 +1,6 @@
-# Reliable Hero CTA Repair
+# Hero CTA Repair
 
-- [ ] Inspect the live click target, stacking order, and event flow.
-- [ ] Replace anchor-only CTA behavior with explicit robust handlers.
-- [ ] Verify View Our Work and Start a Project through real desktop/mobile interaction.
-- [ ] Save and deliver the repaired checkpoint.
+- [ ] Inspect the current deployed CTA implementation and interaction blockers.
+- [ ] Make View Our Work reliably navigate to #work.
+- [ ] Make Start a Project reliably navigate to #contact.
+- [ ] Test both buttons directly in the live browser and save the fix.
