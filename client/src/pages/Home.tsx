@@ -2,6 +2,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Menu, MoveRight, X } from "lucide-react";
 const JawyxWebGLHero = lazy(() => import("@/components/ui/jawyx-webgl-hero").then((module) => ({ default: module.JawyxWebGLHero })));
+import { MagicRings } from "@/components/ui/magic-rings";
 
 const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
 const heroArt = "/manus-storage/jawyx-hero-nebula_f8cd2980.png";
@@ -82,7 +83,7 @@ export default function Home() {
 
     <main>
       <section id="home" className="hero" style={{ backgroundImage: "linear-gradient(90deg, rgba(3,5,9,.92) 0%, rgba(3,5,9,.68) 44%, rgba(3,5,9,.2) 100%)" }}>
-        <Suspense fallback={null}><JawyxWebGLHero /></Suspense>
+        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><MagicRings color="#159dff" colorTwo="#bcecff" ringCount={6} speed={0.55} attenuation={11} lineThickness={1.4} baseRadius={0.32} radiusStep={0.105} scaleRate={0.09} opacity={0.24} noiseAmount={0.03} rotation={-8} ringGap={1.55} fadeIn={0.7} fadeOut={0.52} followMouse mouseInfluence={0.16} hoverScale={1.06} parallax={0.035} />
       </section>
 
       <section id="about" className="manifesto section-dark"><div className="section-rail"><span>02</span><span>Manifesto</span></div><div className="manifesto-inner reveal-on-scroll"><p className="eyebrow">The JawyXDevs approach</p><h2>We don't just build websites.<br /><span>We build digital experiences.</span></h2><div className="manifesto-bottom"><p className="large-copy">The web is where your brand proves what it is. We combine modern frontend engineering, intentional interaction, and search-ready architecture to make that proof impossible to miss.</p><div className="capability-list"><span>High-performance development</span><span>Responsive interfaces</span><span>Interactive 3D experiences</span><span>Conversion-focused UX</span></div></div></div></section>
