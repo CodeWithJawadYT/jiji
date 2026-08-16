@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Menu, MoveRight, X } from "lucide-react";
 const JawyxWebGLHero = lazy(() => import("@/components/ui/jawyx-webgl-hero").then((module) => ({ default: module.JawyxWebGLHero })));
 import { PixelTrail } from "@/components/ui/pixel-trail";
-import { ScrollExpand } from "@/components/ui/scroll-expand";
+import { Antigravity } from "@/components/ui/antigravity";
 
 const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
 const heroArt = "/manus-storage/jawyx-hero-nebula_f8cd2980.png";
@@ -84,7 +84,7 @@ export default function Home() {
 
     <main>
       <section id="home" className="hero" style={{ backgroundColor: "#000000" }}>
-        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><ScrollExpand src={heroArt} alt="JawyXDevs atmospheric digital environment" startWidth={48} startHeight={58} startRadius={24} endRadius={0} mediaZoom={1.28} scrollDistance={1.05} smoothing={0.08} overlayScrim={0.34} /><PixelTrail gridSize={46} trailSize={0.11} maxAge={340} interpolate={5} color="#dff6ff" />
+        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><Antigravity count={190} magnetRadius={6} ringRadius={7} waveSpeed={0.4} waveAmplitude={1} particleSize={0.9} lerpSpeed={0.05} color="#dff6ff" autoAnimate particleVariance={0.85} rotationSpeed={0.03} depthFactor={1} pulseSpeed={3} particleShape="capsule" fieldStrength={10} /><PixelTrail gridSize={46} trailSize={0.11} maxAge={340} interpolate={5} color="#dff6ff" />
       </section>
 
       <section id="about" className="manifesto section-dark"><div className="section-rail"><span>02</span><span>Manifesto</span></div><div className="manifesto-inner reveal-on-scroll"><p className="eyebrow">The JawyXDevs approach</p><h2>We don't just build websites.<br /><span>We build digital experiences.</span></h2><div className="manifesto-bottom"><p className="large-copy">The web is where your brand proves what it is. We combine modern frontend engineering, intentional interaction, and search-ready architecture to make that proof impossible to miss.</p><div className="capability-list"><span>High-performance development</span><span>Responsive interfaces</span><span>Interactive 3D experiences</span><span>Conversion-focused UX</span></div></div></div></section>

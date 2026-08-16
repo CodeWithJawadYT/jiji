@@ -1,7 +1,7 @@
-# ScrollExpand Zoom Integration
+# New Hero Background Integration
 
-- [x] Map the attached ScrollExpand behavior into the existing hero without changing page structure.
-- [x] Implement a branded scroll-driven frame expansion and media zoom stage.
-- [x] Preserve the pure-black background, PixelTrail, logo, typography, sections, projects, pricing, navigation, and existing scroll journey.
-- [x] Verify desktop/mobile scroll behavior, build health, and runtime logs.
+- [x] Read pasted_content_15.txt and identify the hero background implementation.
+- [x] Replace only the current ScrollExpand artwork/background layer.
+- [x] Preserve JawyXDevs branding, black treatment, PixelTrail, zoom behavior, layout, sections, projects, pricing, navigation, and scroll structure.
+- [x] Verify desktop/mobile rendering, build health, and runtime logs.
 - [x] Save and deliver the updated checkpoint.
