@@ -1,10 +1,7 @@
-# JawyXDevs 3D Upgrade Checklist
+# JawyXDevs Hero Reference Adaptation
 
-- [x] Add Three.js, GSAP, ScrollTrigger, and postprocessing dependencies.
-- [x] Build a reusable branded Three.js/WebGL scene component.
-- [x] Add scroll-linked camera transitions and pointer parallax.
-- [x] Add layered particles, atmosphere, metallic geometry, and blue signal lighting.
-- [x] Add WebGL failure fallback, reduced-motion behavior, and mobile quality reduction.
-- [x] Preserve existing JawyXDevs sections, projects, pricing, and logo.
-- [x] Improve structured metadata and semantic content for SEO, AEO, and GEO.
-- [x] Run checks, build, screenshots, and save a final checkpoint.
+- [x] Inspect the attached portfolio code and identify the hero layout, type scale, motion, and interaction patterns to carry over.
+- [x] Recompose the JawyXDevs hero around the reference while keeping the supplied logo and current brand voice.
+- [x] Preserve the Three.js/WebGL layer and adapt its camera, particles, and atmosphere to the new composition.
+- [x] Verify desktop and mobile layout, navigation, CTA behavior, and reduced-motion handling.
+- [x] Save a new checkpoint for delivery.

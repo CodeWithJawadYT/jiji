@@ -26,7 +26,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--signal); outlin
 .nav-cta:hover { background: rgba(21,157,255,.14); transform: translateY(-2px); }
 .menu-toggle { display: none; margin-left: auto; cursor: pointer; }
 .mobile-menu { display: none; }
-.hero { position: relative; min-height: 100svh; display: flex; align-items: center; isolation: isolate; background-size: cover; background-position: center; } .jawyx-webgl { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .9; } .jawyx-webgl canvas { display: block; width: 100%; height: 100%; } .jawyx-webgl.webgl-unavailable { display: none; }
+.hero { position: relative; min-height: 100svh; display: flex; align-items: center; isolation: isolate; background-size: cover; background-position: center; } .jawyx-webgl { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .9; } .jawyx-webgl canvas { display: block; width: 100%; height: 100%; } .jawyx-webgl.webgl-unavailable { display: none; } .webgl-progress { position: absolute; right: clamp(22px, 5vw, 80px); bottom: 27px; z-index: 2; display: flex; align-items: center; gap: 12px; color: #8c9aa6; font: 9px 'IBM Plex Mono', monospace; letter-spacing: .15em; text-transform: uppercase; } .webgl-progress i { display: block; width: 94px; height: 1px; background: rgba(218,231,240,.22); overflow: hidden; } .webgl-progress b { display: block; height: 100%; background: var(--signal); transition: width .25s linear; } .webgl-progress strong { color: #dbe7ef; font-weight: 400; white-space: nowrap; }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -2; background: radial-gradient(circle at 73% 47%, rgba(21,157,255,.11), transparent 28%), linear-gradient(180deg, rgba(2,4,7,.25), #05070a 96%); }
 .hero-grid { position: absolute; inset: 0; z-index: -1; opacity: .22; background-image: linear-gradient(rgba(149,179,203,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(149,179,203,.12) 1px, transparent 1px); background-size: 80px 80px; mask-image: linear-gradient(to bottom, transparent 10%, black 75%, transparent); }
 .particle-field { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
@@ -45,7 +45,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--signal); outlin
 .button-primary:hover { background: #5dbbff; transform: translateY(-2px); }
 .button-ghost { border: 1px solid rgba(230,240,247,.32); color: #dbe5eb; }
 .button-ghost:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
-.hero-meta { position: absolute; bottom: 31px; left: clamp(22px, 5vw, 80px); right: clamp(22px, 5vw, 80px); display: flex; justify-content: space-between; color: #76828d; font: 10px 'IBM Plex Mono', monospace; letter-spacing: .14em; }
+.hero-meta { position: absolute; bottom: 31px; left: clamp(22px, 5vw, 80px); right: clamp(22px, 5vw, 80px); display: flex; justify-content: space-between; color: #76828d; font: 10px 'IBM Plex Mono', monospace; letter-spacing: .14em; } .webgl-progress + * { position: relative; }
 .muted { color: #3a4650; }
 .scroll-cue { position: absolute; bottom: 26px; left: 50%; display: inline-flex; align-items: center; gap: 10px; color: #a8b4bf; font: 10px 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
 .scroll-cue svg { animation: floatDown 1.8s ease-in-out infinite; }
