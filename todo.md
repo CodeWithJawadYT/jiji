@@ -1,7 +1,8 @@
-# JawyXDevs Hero Reference Adaptation
+# JawyXDevs Cinematic Hero Upgrade
 
-- [x] Inspect the attached portfolio code and identify the hero layout, type scale, motion, and interaction patterns to carry over.
-- [x] Recompose the JawyXDevs hero around the reference while keeping the supplied logo and current brand voice.
-- [x] Preserve the Three.js/WebGL layer and adapt its camera, particles, and atmosphere to the new composition.
-- [x] Verify desktop and mobile layout, navigation, CTA behavior, and reduced-motion handling.
-- [x] Save a new checkpoint for delivery.
+- [x] Diagnose static-feeling behavior in the current WebGL scene.
+- [x] Add continuous forward particle travel and depth scaling.
+- [x] Add multi-layer horizon motion, camera dolly, and breathing atmosphere.
+- [x] Add scroll and pointer choreography that reads as a cinematic sequence.
+- [x] Tune reduced-motion and mobile quality paths.
+- [x] Verify the result and save a new checkpoint.

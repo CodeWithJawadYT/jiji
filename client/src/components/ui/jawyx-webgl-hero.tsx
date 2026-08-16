@@ -21,6 +21,8 @@ const STAR_VERTEX = `
     float angle = uTime * 0.045 * (1.0 - uDepth * 0.22);
     mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
     positionCopy.xy = rotation * positionCopy.xy;
+    float travelSpeed = 38.0 + uDepth * 26.0;
+    positionCopy.z = mod(positionCopy.z + uTime * travelSpeed + 520.0, 940.0) - 520.0;
     vec4 mvPosition = modelViewMatrix * vec4(positionCopy, 1.0);
     gl_PointSize = aSize * (280.0 / max(1.0, -mvPosition.z));
     gl_Position = projectionMatrix * mvPosition;
@@ -143,7 +145,7 @@ export function JawyxWebGLHero() {
       const geometry = new THREE.ShapeGeometry(new THREE.Shape(points));
       const material = new THREE.MeshBasicMaterial({ color: layer.color, transparent: true, opacity: layer.opacity, side: THREE.DoubleSide, depthWrite: false });
       const mountain = new THREE.Mesh(geometry, material);
-      mountain.position.set(0, layer.y, layer.z); mountain.scale.setScalar(layer.scale); mountain.userData.baseZ = layer.z; mountain.userData.layerIndex = layerIndex;
+      mountain.position.set(0, layer.y, layer.z); mountain.scale.setScalar(layer.scale); mountain.userData.baseZ = layer.z; mountain.userData.baseY = layer.y; mountain.userData.layerIndex = layerIndex;
       refs.scene.add(mountain); refs.mountains.push(mountain);
     });
 
@@ -173,8 +175,12 @@ export function JawyxWebGLHero() {
       (nebula.material as THREE.ShaderMaterial).uniforms.uTime.value = seconds;
       if (refs.atmosphere) (refs.atmosphere.material as THREE.ShaderMaterial).uniforms.uTime.value = seconds;
       refs.forms.forEach((form, index) => { form.rotation.x += 0.0015 * (index + 1); form.rotation.y += 0.002 * (index + 1); form.position.y += Math.sin(seconds * 0.42 + index) * 0.012; });
-      refs.mountains.forEach((mountain, index) => { mountain.position.x = Math.sin(seconds * 0.11 + index) * (2 + index * 1.5); mountain.position.z = (mountain.userData.baseZ as number) + Math.sin(seconds * 0.08 + index) * 2; });
-      if (!mobile) { refs.camera.position.x += (pointer.x * 3.5 - refs.camera.position.x) * 0.025; refs.camera.rotation.x += (pointer.y * -0.018 - refs.camera.rotation.x) * 0.025; }
+      refs.mountains.forEach((mountain, index) => { const depthWave = Math.sin(seconds * (0.32 + index * 0.08) + index) * (3 + index * 2); mountain.position.x = Math.sin(seconds * 0.11 + index) * (5 + index * 3) + pointer.x * (8 + index * 7); mountain.position.y = (mountain.userData.baseY as number) + depthWave + pointer.y * (index + 1) * 1.5; mountain.position.z = (mountain.userData.baseZ as number) + Math.sin(seconds * 0.08 + index) * 5; });
+      nebula.position.x = 80 + Math.sin(seconds * 0.12) * 24 + pointer.x * 14;
+      nebula.position.y = 30 + Math.cos(seconds * 0.1) * 12 + pointer.y * 8;
+      nebula.scale.setScalar(1 + Math.sin(seconds * 0.3) * 0.035);
+      if (refs.atmosphere) { refs.atmosphere.position.x = 172 + Math.sin(seconds * 0.18) * 18 + pointer.x * 10; refs.atmosphere.position.y = -22 + Math.cos(seconds * 0.16) * 10 + pointer.y * 8; refs.atmosphere.scale.setScalar(1 + Math.sin(seconds * 0.4) * 0.06); }
+      if (!mobile) { refs.camera.position.x += (pointer.x * 3.5 - refs.camera.position.x) * 0.025; refs.camera.rotation.x += (pointer.y * -0.018 - refs.camera.rotation.x) * 0.025; refs.camera.position.y += Math.sin(seconds * 0.22) * 0.006; refs.camera.rotation.z += Math.sin(seconds * 0.16) * 0.00015; }
       refs.composer?.render(); refs.raf = requestAnimationFrame(animate);
     };
     refs.raf = requestAnimationFrame(animate);
@@ -182,5 +188,5 @@ export function JawyxWebGLHero() {
     return () => { refs.disposed = true; cancelAnimationFrame(refs.raf); refs.scrollTrigger?.kill(); window.removeEventListener("pointermove", onPointer); window.removeEventListener("resize", resize); refs.stars.forEach((star) => { star.geometry.dispose(); (star.material as THREE.Material).dispose(); }); refs.forms.forEach((form) => { form.geometry.dispose(); (form.material as THREE.Material).dispose(); }); refs.mountains.forEach((mountain) => { mountain.geometry.dispose(); (mountain.material as THREE.Material).dispose(); }); nebulaGeometry.dispose(); nebulaMaterial.dispose(); atmosphereGeometry.dispose(); atmosphereMaterial.dispose(); refs.renderer?.dispose(); refs.composer?.dispose(); };
   }, []);
 
-  return <div ref={mountRef} className="jawyx-webgl" aria-hidden="true"><canvas ref={canvasRef} /><div className="webgl-progress"><span>SCROLL</span><i><b style={{ width: `${scrollProgress * 100}%` }} /></i><strong>{String(currentSection).padStart(2, "0")} / 06</strong></div></div>;
+  return <div ref={mountRef} className="jawyx-webgl" aria-hidden="true"><canvas ref={canvasRef} /><div className="video-scanline" /><div className="scene-timecode">JX / LIVE RENDER / 60 FPS</div><div className="webgl-progress"><span>SCROLL</span><i><b style={{ width: `${scrollProgress * 100}%` }} /></i><strong>{String(currentSection).padStart(2, "0")} / 06</strong></div></div>;
 }
