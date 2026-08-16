@@ -5,6 +5,7 @@ const JawyxWebGLHero = lazy(() => import("@/components/ui/jawyx-webgl-hero").the
 import { PixelTrail } from "@/components/ui/pixel-trail";
 import { Antigravity } from "@/components/ui/antigravity";
 import Masonry from "@/components/ui/Masonry";
+import WebThreads from "@/components/ui/WebThreads";
 
 const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
 const heroArt = "/manus-storage/jawyx-hero-nebula_f8cd2980.png";
@@ -87,7 +88,7 @@ export default function Home() {
 
     <main>
       <section id="home" className="hero" style={{ backgroundColor: "#000000" }}>
-        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><Antigravity count={190} magnetRadius={6} ringRadius={7} waveSpeed={0.4} waveAmplitude={1} particleSize={0.9} lerpSpeed={0.05} color="#ffffff" autoAnimate particleVariance={0.85} rotationSpeed={0.03} depthFactor={1} pulseSpeed={3} particleShape="capsule" fieldStrength={10} /><PixelTrail gridSize={46} trailSize={0.11} maxAge={340} interpolate={5} color="#5227FF" />
+        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><WebThreads color1="#5227FF" color2="#FF9FFC" color3="#FFFFFF" speed={0.2} threadCount={6} frequency={5} spread={0.18} taper={1} position={0.56} fanMode="center" glow={0.02} falloff={0.6} thickness={1.1} brightness={0.72} opacity={0.92} mirror grain grainIntensity={0.035} mouseInteraction mouseStrength={0.3} /><Antigravity count={190} magnetRadius={6} ringRadius={7} waveSpeed={0.4} waveAmplitude={1} particleSize={0.9} lerpSpeed={0.05} color="#ffffff" autoAnimate particleVariance={0.85} rotationSpeed={0.03} depthFactor={1} pulseSpeed={3} particleShape="capsule" fieldStrength={10} /><PixelTrail gridSize={46} trailSize={0.11} maxAge={340} interpolate={5} color="#5227FF" />
       </section>
 
       <section id="about" className="manifesto section-dark"><div className="section-rail"><span>02</span><span>Manifesto</span></div><div className="manifesto-inner reveal-on-scroll"><p className="eyebrow">The JawyXDevs approach</p><h2>We don't just build websites.<br /><span>We build digital experiences.</span></h2><div className="manifesto-bottom"><p className="large-copy">The web is where your brand proves what it is. We combine modern frontend engineering, intentional interaction, and search-ready architecture to make that proof impossible to miss.</p><div className="capability-list"><span>High-performance development</span><span>Responsive interfaces</span><span>Interactive 3D experiences</span><span>Conversion-focused UX</span></div></div></div></section>

@@ -1,7 +1,7 @@
-# Masonry Animation Integration
+# WebThreads Background Integration
 
-- [x] Inspect the existing work/projects section and identify the safest integration point.
-- [x] Add the GSAP Masonry component and JawyXDevs project imagery/data.
-- [x] Preserve real project links, existing section navigation, and premium visual language.
-- [x] Verify desktop, tablet, mobile, hover, entrance animation, and build health.
+- [ ] Add the WebThreads shader component and required OGL dependency support.
+- [ ] Integrate the purple-pink-white thread background into the existing hero without removing current effects.
+- [ ] Preserve black cinematic contrast, typography, white Antigravity, and #5227FF PixelTrail.
+- [ ] Verify desktop/mobile layering, WebGL cleanup, and production build health.
 - [ ] Save and deliver the updated checkpoint.
