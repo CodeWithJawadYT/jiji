@@ -1,6 +1,6 @@
-# Hero CTA Repair
+# GitHub Pages 404 Fix
 
-- [ ] Inspect the current deployed CTA implementation and interaction blockers.
-- [ ] Make View Our Work reliably navigate to #work.
-- [ ] Make Start a Project reliably navigate to #contact.
-- [ ] Test both buttons directly in the live browser and save the fix.
+- [ ] Inspect repository remotes, branch, and current GitHub deployment files.
+- [ ] Add a GitHub Pages-compatible Vite build/deployment workflow.
+- [ ] Verify the production build and workflow configuration.
+- [ ] Save and deliver the fix with the required GitHub Pages settings.
