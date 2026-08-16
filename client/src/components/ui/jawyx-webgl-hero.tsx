@@ -47,8 +47,7 @@ export function JawyxWebGLHero() {
   useEffect(() => {
     const mount = mountRef.current;
     const canvas = canvasRef.current;
-    const home = document.getElementById("home");
-    if (!mount || !canvas || !home) return;
+    if (!mount || !canvas) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const mobile = window.matchMedia("(max-width: 700px)").matches;
@@ -64,11 +63,13 @@ export function JawyxWebGLHero() {
       atmosphere: null as THREE.Mesh | null,
       raf: 0,
       scrollTrigger: null as ScrollTrigger | null,
+      cameraTarget: { x: 0, y: 6, z: 26 },
       disposed: false,
     };
 
     refs.scene.fog = new THREE.FogExp2(0x03070c, mobile ? 0.0018 : 0.00095);
     refs.camera.position.set(0, 6, mobile ? 31 : 26);
+    refs.cameraTarget = { x: 0, y: 6, z: mobile ? 31 : 26 };
 
     try {
       refs.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile, powerPreference: "high-performance" });
@@ -162,8 +163,16 @@ export function JawyxWebGLHero() {
     const onPointer = (event: PointerEvent) => { if (mobile) return; pointer.x = (event.clientX / window.innerWidth - 0.5) * 2; pointer.y = (event.clientY / window.innerHeight - 0.5) * 2; };
     window.addEventListener("pointermove", onPointer, { passive: true });
 
+    const cameraPath = [
+      { x: 0, y: 6, z: mobile ? 31 : 26 },
+      { x: 3, y: 2, z: mobile ? 42 : 42 },
+      { x: -4, y: -7, z: mobile ? 58 : 64 },
+      { x: 5, y: -14, z: mobile ? 76 : 88 },
+      { x: -3, y: -4, z: mobile ? 96 : 112 },
+      { x: 0, y: 8, z: mobile ? 118 : 140 },
+    ];
     if (!reducedMotion) {
-      refs.scrollTrigger = ScrollTrigger.create({ trigger: home, start: "top top", end: "bottom top", scrub: 1.2, onUpdate: (self) => { refs.camera.position.y = THREE.MathUtils.lerp(6, -18, self.progress); refs.camera.position.z = THREE.MathUtils.lerp(mobile ? 31 : 26, mobile ? 47 : 58, self.progress); refs.camera.rotation.z = self.progress * 0.035; setScrollProgress(self.progress); setCurrentSection(Math.min(6, Math.max(1, Math.floor(self.progress * 6) + 1))); } });
+      refs.scrollTrigger = ScrollTrigger.create({ trigger: document.body, start: "top top", end: "bottom bottom", scrub: 1.3, onUpdate: (self) => { const scaled = self.progress * (cameraPath.length - 1); const index = Math.min(cameraPath.length - 2, Math.floor(scaled)); const local = scaled - index; const from = cameraPath[index]; const to = cameraPath[index + 1]; refs.cameraTarget.x = THREE.MathUtils.lerp(from.x, to.x, local); refs.cameraTarget.y = THREE.MathUtils.lerp(from.y, to.y, local); refs.cameraTarget.z = THREE.MathUtils.lerp(from.z, to.z, local); refs.camera.rotation.z = self.progress * 0.06; setScrollProgress(self.progress); setCurrentSection(Math.min(6, Math.max(1, Math.floor(self.progress * 6) + 1))); } });
     }
 
     const resize = () => { if (!refs.renderer || !refs.composer) return; const width = mount.clientWidth || window.innerWidth; const height = mount.clientHeight || window.innerHeight; refs.camera.aspect = width / height; refs.camera.updateProjectionMatrix(); refs.renderer.setSize(width, height, false); refs.composer.setSize(width, height); };
@@ -180,7 +189,12 @@ export function JawyxWebGLHero() {
       nebula.position.y = 30 + Math.cos(seconds * 0.1) * 12 + pointer.y * 8;
       nebula.scale.setScalar(1 + Math.sin(seconds * 0.3) * 0.035);
       if (refs.atmosphere) { refs.atmosphere.position.x = 172 + Math.sin(seconds * 0.18) * 18 + pointer.x * 10; refs.atmosphere.position.y = -22 + Math.cos(seconds * 0.16) * 10 + pointer.y * 8; refs.atmosphere.scale.setScalar(1 + Math.sin(seconds * 0.4) * 0.06); }
-      if (!mobile) { refs.camera.position.x += (pointer.x * 3.5 - refs.camera.position.x) * 0.025; refs.camera.rotation.x += (pointer.y * -0.018 - refs.camera.rotation.x) * 0.025; refs.camera.position.y += Math.sin(seconds * 0.22) * 0.006; refs.camera.rotation.z += Math.sin(seconds * 0.16) * 0.00015; }
+      refs.camera.position.x += (refs.cameraTarget.x + (mobile ? 0 : pointer.x * 3.5) - refs.camera.position.x) * 0.045;
+      refs.camera.position.y += (refs.cameraTarget.y + (mobile ? 0 : pointer.y * -2.2) - refs.camera.position.y) * 0.045;
+      refs.camera.position.z += (refs.cameraTarget.z - refs.camera.position.z) * 0.045;
+      refs.camera.rotation.x += ((mobile ? 0 : pointer.y * -0.018) - refs.camera.rotation.x) * 0.03;
+      refs.camera.rotation.z += Math.sin(seconds * 0.16) * 0.00015;
+      refs.camera.lookAt(pointer.x * 8, pointer.y * 3, -180);
       refs.composer?.render(); refs.raf = requestAnimationFrame(animate);
     };
     refs.raf = requestAnimationFrame(animate);
