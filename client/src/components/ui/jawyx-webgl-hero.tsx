@@ -1,4 +1,4 @@
-/* JawyXDevs style: cinematic industrial futurism — the WebGL layer is a restrained signal field of cobalt light, metallic forms, and atmospheric depth. */
+/* JawyXDevs style: supplied Horizon/Cosmos hero architecture adapted to a premium black, metallic silver, and electric-blue digital systems studio. */
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { gsap } from "gsap";
@@ -6,201 +6,57 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const STAR_VERTEX = `
-  attribute float aSize;
-  attribute vec3 aColor;
-  varying vec3 vColor;
-  uniform float uTime;
-  uniform float uDepth;
-  void main() {
-    vColor = aColor;
-    vec3 positionCopy = position;
-    float angle = uTime * 0.045 * (1.0 - uDepth * 0.22);
-    mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-    positionCopy.xy = rotation * positionCopy.xy;
-    float travelSpeed = 38.0 + uDepth * 26.0;
-    positionCopy.z = mod(positionCopy.z + uTime * travelSpeed + 520.0, 940.0) - 520.0;
-    vec4 mvPosition = modelViewMatrix * vec4(positionCopy, 1.0);
-    gl_PointSize = aSize * (280.0 / max(1.0, -mvPosition.z));
-    gl_Position = projectionMatrix * mvPosition;
-  }
-`;
-const STAR_FRAGMENT = `
-  varying vec3 vColor;
-  void main() {
-    float distanceToCenter = length(gl_PointCoord - vec2(0.5));
-    if (distanceToCenter > 0.5) discard;
-    float alpha = 1.0 - smoothstep(0.05, 0.5, distanceToCenter);
-    gl_FragColor = vec4(vColor, alpha * 0.92);
-  }
-`;
+const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
+const title = "CRAFTING HIGH-PERFORMANCE DIGITAL EXPERIENCES THAT SCALE BRANDS WORLDWIDE.";
+const words = title.split(" ");
+
+const starVertex = `attribute float size; attribute vec3 color; varying vec3 vColor; uniform float time; uniform float depth; void main(){ vColor=color; vec3 pos=position; float angle=time*.05*(1.-depth*.3); mat2 rot=mat2(cos(angle),-sin(angle),sin(angle),cos(angle)); pos.xy=rot*pos.xy; pos.z=mod(pos.z+time*(34.+depth*22.)+900.,1800.)-900.; vec4 mv=modelViewMatrix*vec4(pos,1.); gl_PointSize=size*(320./max(1.,-mv.z)); gl_Position=projectionMatrix*mv; }`;
+const starFragment = `varying vec3 vColor; void main(){ float dist=length(gl_PointCoord-vec2(.5)); if(dist>.5) discard; float alpha=1.-smoothstep(.04,.5,dist); gl_FragColor=vec4(vColor,alpha); }`;
 
 export function JawyxWebGLHero() {
-  const mountRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentSection, setCurrentSection] = useState(1);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const mount = mountRef.current;
+    const container = containerRef.current;
     const canvas = canvasRef.current;
-    if (!mount || !canvas) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!container || !canvas) return;
     const mobile = window.matchMedia("(max-width: 700px)").matches;
-    const pixelRatio = Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.8);
-    const refs = {
-      scene: new THREE.Scene(),
-      camera: new THREE.PerspectiveCamera(52, 1, 0.1, 1800),
-      renderer: null as THREE.WebGLRenderer | null,
-      composer: null as EffectComposer | null,
-      stars: [] as THREE.Points[],
-      forms: [] as THREE.Mesh[],
-      mountains: [] as THREE.Mesh[],
-      atmosphere: null as THREE.Mesh | null,
-      raf: 0,
-      scrollTrigger: null as ScrollTrigger | null,
-      cameraTarget: { x: 0, y: 6, z: 26 },
-      disposed: false,
-    };
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const refs = { scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera(75, 1, .1, 2200), renderer: null as THREE.WebGLRenderer | null, composer: null as EffectComposer | null, stars: [] as THREE.Points[], mountains: [] as THREE.Mesh[], nebula: null as THREE.Mesh | null, atmosphere: null as THREE.Mesh | null, raf: 0, scrollTrigger: null as ScrollTrigger | null, target: { x: 0, y: 20, z: 100 }, disposed: false };
+    refs.scene.fog = new THREE.FogExp2(0x000810, mobile ? .0005 : .00025);
+    refs.camera.position.set(0, 20, 100);
+    try { refs.renderer = new THREE.WebGLRenderer({ canvas, antialias: !mobile, alpha: true, powerPreference: "high-performance" }); } catch { container.classList.add("webgl-unavailable"); return; }
+    refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.8)); refs.renderer.toneMapping = THREE.ACESFilmicToneMapping; refs.renderer.toneMappingExposure = .62; refs.renderer.setClearColor(0x000000, 0);
+    refs.composer = new EffectComposer(refs.renderer); refs.composer.addPass(new RenderPass(refs.scene, refs.camera)); if (!mobile && !reducedMotion) refs.composer.addPass(new UnrealBloomPass(new THREE.Vector2(1,1), .72, .4, .82));
 
-    refs.scene.fog = new THREE.FogExp2(0x03070c, mobile ? 0.0018 : 0.00095);
-    refs.camera.position.set(0, 6, mobile ? 31 : 26);
-    refs.cameraTarget = { x: 0, y: 6, z: mobile ? 31 : 26 };
-
-    try {
-      refs.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile, powerPreference: "high-performance" });
-    } catch {
-      mount.classList.add("webgl-unavailable");
-      return;
-    }
-    refs.renderer.setPixelRatio(pixelRatio);
-    refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    refs.renderer.toneMappingExposure = 1.05;
-    refs.renderer.setClearColor(0x000000, 0);
-    refs.composer = new EffectComposer(refs.renderer);
-    refs.composer.addPass(new RenderPass(refs.scene, refs.camera));
-    if (!mobile && !reducedMotion) refs.composer.addPass(new UnrealBloomPass(new THREE.Vector2(1, 1), 0.48, 0.55, 0.72));
-
-    const makeStars = (depth: number, count: number, spread: number) => {
-      const positions = new Float32Array(count * 3);
-      const colors = new Float32Array(count * 3);
-      const sizes = new Float32Array(count);
-      for (let i = 0; i < count; i += 1) {
-        const radius = spread * (0.55 + Math.random() * 0.45);
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(Math.random() * 2 - 1);
-        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.7;
-        positions[i * 3 + 2] = radius * Math.cos(phi) - 210;
-        const blue = Math.random() > 0.72;
-        const color = new THREE.Color(blue ? 0x159dff : 0xdceaf5);
-        colors[i * 3] = color.r; colors[i * 3 + 1] = color.g; colors[i * 3 + 2] = color.b;
-        sizes[i] = 0.55 + Math.random() * (blue ? 1.7 : 1.1);
-      }
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
-      geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
-      const material = new THREE.ShaderMaterial({ uniforms: { uTime: { value: 0 }, uDepth: { value: depth } }, vertexShader: STAR_VERTEX, fragmentShader: STAR_FRAGMENT, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
-      const stars = new THREE.Points(geometry, material);
-      refs.scene.add(stars); refs.stars.push(stars);
-    };
-    makeStars(0, mobile ? 500 : 1500, 460); makeStars(1, mobile ? 320 : 900, 640); makeStars(2, mobile ? 180 : 500, 830);
-
-    const nebulaGeometry = new THREE.PlaneGeometry(1200, 650, 32, 18);
-    const nebulaMaterial = new THREE.ShaderMaterial({
-      uniforms: { uTime: { value: 0 }, uColorA: { value: new THREE.Color(0x03182c) }, uColorB: { value: new THREE.Color(0x0b6fbd) } },
-      vertexShader: `varying vec2 vUv; uniform float uTime; void main(){vUv=uv; vec3 p=position; p.z += sin(p.x*.018+uTime*.5)*6.0*cos(p.y*.02+uTime*.28); gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
-      fragmentShader: `varying vec2 vUv; uniform vec3 uColorA; uniform vec3 uColorB; uniform float uTime; void main(){float wave=sin(vUv.x*9.0+uTime*.45)*cos(vUv.y*7.0-uTime*.25)*.5+.5; float edge=1.0-smoothstep(.08,.72,length(vUv-vec2(.5))); vec3 color=mix(uColorA,uColorB,wave); gl_FragColor=vec4(color,edge*.13);}`,
-      transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial); nebula.position.set(80, 30, -230); nebula.rotation.y = -0.18; refs.scene.add(nebula);
-
-    const atmosphereGeometry = new THREE.SphereGeometry(mobile ? 78 : 104, mobile ? 20 : 32, mobile ? 14 : 24);
-    const atmosphereMaterial = new THREE.ShaderMaterial({
-      uniforms: { uTime: { value: 0 } },
-      vertexShader: `varying vec3 vNormal; void main(){vNormal=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-      fragmentShader: `varying vec3 vNormal; uniform float uTime; void main(){float edge=pow(0.68-dot(vNormal,vec3(0.,0.,1.)),2.4); float pulse=.88+sin(uTime*1.4)*.08; vec3 color=vec3(.015,.16,.42)*edge*pulse; gl_FragColor=vec4(color,edge*.18);}`,
-      side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    refs.atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial); refs.atmosphere.position.set(172, -22, -340); refs.scene.add(refs.atmosphere);
-
-    const mountainLayers = [
-      { z: -82, y: -34, scale: 1.02, color: 0x07111d, opacity: 0.92 },
-      { z: -126, y: -30, scale: 0.9, color: 0x0a2034, opacity: 0.72 },
-      { z: -176, y: -26, scale: 0.78, color: 0x0b3859, opacity: 0.48 },
-    ];
-    mountainLayers.forEach((layer, layerIndex) => {
-      const points: THREE.Vector2[] = [];
-      const segments = mobile ? 26 : 46;
-      for (let i = 0; i <= segments; i += 1) {
-        const x = (i / segments - 0.5) * 620;
-        const y = Math.sin(i * 0.48 + layerIndex) * (24 + layerIndex * 10) + Math.sin(i * 0.18) * 22 - 45;
-        points.push(new THREE.Vector2(x, y));
-      }
-      points.push(new THREE.Vector2(900, -180), new THREE.Vector2(-900, -180));
-      const geometry = new THREE.ShapeGeometry(new THREE.Shape(points));
-      const material = new THREE.MeshBasicMaterial({ color: layer.color, transparent: true, opacity: layer.opacity, side: THREE.DoubleSide, depthWrite: false });
-      const mountain = new THREE.Mesh(geometry, material);
-      mountain.position.set(0, layer.y, layer.z); mountain.scale.setScalar(layer.scale); mountain.userData.baseZ = layer.z; mountain.userData.baseY = layer.y; mountain.userData.layerIndex = layerIndex;
-      refs.scene.add(mountain); refs.mountains.push(mountain);
-    });
-
-    const addForm = (geometry: THREE.BufferGeometry, position: [number, number, number], rotation: [number, number, number], scale: number, blue = false) => {
-      const material = new THREE.MeshStandardMaterial({ color: blue ? 0x0b74c7 : 0xc3d0da, metalness: 0.82, roughness: blue ? 0.24 : 0.34, emissive: blue ? 0x03294e : 0x1a2b38, emissiveIntensity: blue ? 0.38 : 0.18, flatShading: true });
-      const mesh = new THREE.Mesh(geometry, material); mesh.position.set(...position); mesh.rotation.set(...rotation); mesh.scale.setScalar(scale); refs.scene.add(mesh); refs.forms.push(mesh);
-    };
-
-    const light = new THREE.PointLight(0x159dff, 4.5, 420); light.position.set(145, 55, -85); refs.scene.add(light);
-    const fill = new THREE.PointLight(0xc6d9e8, 2.2, 360); fill.position.set(-140, 70, -90); refs.scene.add(fill);
-    const ambient = new THREE.AmbientLight(0x5b7185, 1.15); refs.scene.add(ambient);
-
-    const pointer = { x: 0, y: 0 };
-    const onPointer = (event: PointerEvent) => { if (mobile) return; pointer.x = (event.clientX / window.innerWidth - 0.5) * 2; pointer.y = (event.clientY / window.innerHeight - 0.5) * 2; };
-    window.addEventListener("pointermove", onPointer, { passive: true });
-
-    const cameraPath = [
-      { x: 0, y: 6, z: mobile ? 31 : 26 },
-      { x: 3, y: 2, z: mobile ? 42 : 42 },
-      { x: -4, y: -7, z: mobile ? 58 : 64 },
-      { x: 5, y: -14, z: mobile ? 76 : 88 },
-      { x: -3, y: -4, z: mobile ? 96 : 112 },
-      { x: 0, y: 8, z: mobile ? 118 : 140 },
-    ];
-    if (!reducedMotion) {
-      refs.scrollTrigger = ScrollTrigger.create({ trigger: document.body, start: "top top", end: "bottom bottom", scrub: 1.3, onUpdate: (self) => { const scaled = self.progress * (cameraPath.length - 1); const index = Math.min(cameraPath.length - 2, Math.floor(scaled)); const local = scaled - index; const from = cameraPath[index]; const to = cameraPath[index + 1]; refs.cameraTarget.x = THREE.MathUtils.lerp(from.x, to.x, local); refs.cameraTarget.y = THREE.MathUtils.lerp(from.y, to.y, local); refs.cameraTarget.z = THREE.MathUtils.lerp(from.z, to.z, local); refs.camera.rotation.z = self.progress * 0.06; setScrollProgress(self.progress); setCurrentSection(Math.min(6, Math.max(1, Math.floor(self.progress * 6) + 1))); } });
-    }
-
-    const resize = () => { if (!refs.renderer || !refs.composer) return; const width = mount.clientWidth || window.innerWidth; const height = mount.clientHeight || window.innerHeight; refs.camera.aspect = width / height; refs.camera.updateProjectionMatrix(); refs.renderer.setSize(width, height, false); refs.composer.setSize(width, height); };
-    resize(); window.addEventListener("resize", resize);
-    const animate = (time: number) => {
-      if (refs.disposed) return;
-      const seconds = time * 0.001;
-      refs.stars.forEach((star, index) => { (star.material as THREE.ShaderMaterial).uniforms.uTime.value = seconds; star.rotation.z = seconds * 0.008 * (index + 1); });
-      (nebula.material as THREE.ShaderMaterial).uniforms.uTime.value = seconds;
-      if (refs.atmosphere) (refs.atmosphere.material as THREE.ShaderMaterial).uniforms.uTime.value = seconds;
-      refs.forms.forEach((form, index) => { form.rotation.x += 0.0015 * (index + 1); form.rotation.y += 0.002 * (index + 1); form.position.y += Math.sin(seconds * 0.42 + index) * 0.012; });
-      refs.mountains.forEach((mountain, index) => { const depthWave = Math.sin(seconds * (0.32 + index * 0.08) + index) * (3 + index * 2); mountain.position.x = Math.sin(seconds * 0.11 + index) * (5 + index * 3) + pointer.x * (8 + index * 7); mountain.position.y = (mountain.userData.baseY as number) + depthWave + pointer.y * (index + 1) * 1.5; mountain.position.z = (mountain.userData.baseZ as number) + Math.sin(seconds * 0.08 + index) * 5; });
-      nebula.position.x = 80 + Math.sin(seconds * 0.12) * 24 + pointer.x * 14;
-      nebula.position.y = 30 + Math.cos(seconds * 0.1) * 12 + pointer.y * 8;
-      nebula.scale.setScalar(1 + Math.sin(seconds * 0.3) * 0.035);
-      if (refs.atmosphere) { refs.atmosphere.position.x = 172 + Math.sin(seconds * 0.18) * 18 + pointer.x * 10; refs.atmosphere.position.y = -22 + Math.cos(seconds * 0.16) * 10 + pointer.y * 8; refs.atmosphere.scale.setScalar(1 + Math.sin(seconds * 0.4) * 0.06); }
-      refs.camera.position.x += (refs.cameraTarget.x + (mobile ? 0 : pointer.x * 3.5) - refs.camera.position.x) * 0.045;
-      refs.camera.position.y += (refs.cameraTarget.y + (mobile ? 0 : pointer.y * -2.2) - refs.camera.position.y) * 0.045;
-      refs.camera.position.z += (refs.cameraTarget.z - refs.camera.position.z) * 0.045;
-      refs.camera.rotation.x += ((mobile ? 0 : pointer.y * -0.018) - refs.camera.rotation.x) * 0.03;
-      refs.camera.rotation.z += Math.sin(seconds * 0.16) * 0.00015;
-      refs.camera.lookAt(pointer.x * 8, pointer.y * 3, -180);
-      refs.composer?.render(); refs.raf = requestAnimationFrame(animate);
-    };
-    refs.raf = requestAnimationFrame(animate);
-
-    return () => { refs.disposed = true; cancelAnimationFrame(refs.raf); refs.scrollTrigger?.kill(); window.removeEventListener("pointermove", onPointer); window.removeEventListener("resize", resize); refs.stars.forEach((star) => { star.geometry.dispose(); (star.material as THREE.Material).dispose(); }); refs.forms.forEach((form) => { form.geometry.dispose(); (form.material as THREE.Material).dispose(); }); refs.mountains.forEach((mountain) => { mountain.geometry.dispose(); (mountain.material as THREE.Material).dispose(); }); nebulaGeometry.dispose(); nebulaMaterial.dispose(); atmosphereGeometry.dispose(); atmosphereMaterial.dispose(); refs.renderer?.dispose(); refs.composer?.dispose(); };
+    const createStars = () => { const count = mobile ? 850 : 5000; for (let layer = 0; layer < 3; layer++) { const positions = new Float32Array(count * 3); const colors = new Float32Array(count * 3); const sizes = new Float32Array(count); for (let i=0;i<count;i++) { const radius=200+Math.random()*800; const theta=Math.random()*Math.PI*2; const phi=Math.acos(Math.random()*2-1); positions[i*3]=radius*Math.sin(phi)*Math.cos(theta); positions[i*3+1]=radius*Math.sin(phi)*Math.sin(theta); positions[i*3+2]=radius*Math.cos(phi)-layer*220; const blue=Math.random()>.76; const c=new THREE.Color(blue?0x159dff:0xdbe8f4); colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b; sizes[i]=.55+Math.random()*(blue?1.8:1.2); } const g=new THREE.BufferGeometry(); g.setAttribute("position",new THREE.BufferAttribute(positions,3)); g.setAttribute("color",new THREE.BufferAttribute(colors,3)); g.setAttribute("size",new THREE.BufferAttribute(sizes,1)); const m=new THREE.ShaderMaterial({ uniforms:{time:{value:0},depth:{value:layer}}, vertexShader:starVertex, fragmentShader:starFragment, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false }); const stars=new THREE.Points(g,m); refs.scene.add(stars); refs.stars.push(stars); } };
+    const createNebula = () => { const g=new THREE.PlaneGeometry(8000,4000,80,40); const m=new THREE.ShaderMaterial({ uniforms:{time:{value:0},color1:{value:new THREE.Color(0x0033aa)},color2:{value:new THREE.Color(0x159dff)}}, vertexShader:`varying vec2 vUv; uniform float time; void main(){vUv=uv; vec3 p=position; p.z+=sin(p.x*.01+time)*cos(p.y*.01+time)*20.; gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`, fragmentShader:`varying vec2 vUv; uniform vec3 color1; uniform vec3 color2; uniform float time; void main(){float f=sin(vUv.x*10.+time)*cos(vUv.y*10.+time)*.5+.5; vec3 c=mix(color1,color2,f); float a=.28*(1.-length(vUv-.5)*2.); gl_FragColor=vec4(c,a);}`, transparent:true, blending:THREE.AdditiveBlending, side:THREE.DoubleSide, depthWrite:false }); refs.nebula=new THREE.Mesh(g,m); refs.nebula.position.z=-1050; refs.scene.add(refs.nebula); };
+    const createMountains = () => { const layers=[[-50,60,0x07111d,1],[-100,80,0x0a2034,.8],[-150,100,0x0b3859,.6],[-200,120,0x0b527c,.4]] as const; layers.forEach(([z,height,color,opacity],index)=>{ const pts:THREE.Vector2[]=[]; const segments=mobile?28:50; for(let i=0;i<=segments;i++){const x=(i/segments-.5)*1000; const y=Math.sin(i*.1)*height+Math.sin(i*.05)*height*.5+Math.random()*height*.2-100; pts.push(new THREE.Vector2(x,y));} pts.push(new THREE.Vector2(5000,-300),new THREE.Vector2(-5000,-300)); const g=new THREE.ShapeGeometry(new THREE.Shape(pts)); const m=new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.DoubleSide,depthWrite:false}); const mesh=new THREE.Mesh(g,m); mesh.position.set(0,z===-50?z/2:z/2,z); mesh.userData={baseZ:z,baseY:z===-50?z/2:z/2,index}; refs.scene.add(mesh); refs.mountains.push(mesh); }); };
+    const createAtmosphere = () => { const g=new THREE.SphereGeometry(mobile?420:600,mobile?24:42,mobile?18:28); const m=new THREE.ShaderMaterial({uniforms:{time:{value:0}},vertexShader:`varying vec3 n; void main(){n=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,fragmentShader:`varying vec3 n; uniform float time; void main(){float e=pow(.7-dot(n,vec3(0.,0.,1.)),2.); float pulse=.9+sin(time*2.)*.1; vec3 c=vec3(.03,.36,1.)*e*pulse; gl_FragColor=vec4(c,e*.28);}`,side:THREE.BackSide,blending:THREE.AdditiveBlending,transparent:true}); refs.atmosphere=new THREE.Mesh(g,m); refs.atmosphere.position.set(260,10,-420); refs.scene.add(refs.atmosphere); };
+    createStars(); createNebula(); createMountains(); createAtmosphere();
+    const blueLight=new THREE.PointLight(0x159dff,5,600); blueLight.position.set(220,80,-120); refs.scene.add(blueLight); const silverLight=new THREE.PointLight(0xd9e9f5,2.5,500); silverLight.position.set(-160,120,-90); refs.scene.add(silverLight); refs.scene.add(new THREE.AmbientLight(0x59758b,1.1));
+    const pointer={x:0,y:0}; const onPointer=(e:PointerEvent)=>{if(mobile)return; pointer.x=(e.clientX/window.innerWidth-.5)*2; pointer.y=(e.clientY/window.innerHeight-.5)*2;}; window.addEventListener("pointermove",onPointer,{passive:true});
+    const cameraPositions=[{x:0,y:30,z:300},{x:0,y:40,z:-50},{x:0,y:50,z:-700}];
+    const updateScroll=(progress:number)=>{ const scaled=progress*2; const section=Math.min(1,Math.floor(scaled)); const local=scaled-section; const from=cameraPositions[section]; const to=cameraPositions[section+1]??from; refs.target.x=THREE.MathUtils.lerp(from.x,to.x,local); refs.target.y=THREE.MathUtils.lerp(from.y,to.y,local); refs.target.z=THREE.MathUtils.lerp(from.z,to.z,local); setScrollProgress(progress); setCurrentSection(Math.min(2,Math.floor(progress*3)+1)); };
+    const scrollTrigger=ScrollTrigger.create({trigger:document.body,start:"top top",end:"bottom bottom",scrub:1.15,onUpdate:self=>updateScroll(self.progress)}); refs.scrollTrigger=scrollTrigger;
+    const resize=()=>{if(!refs.renderer||!refs.composer)return; const w=window.innerWidth,h=window.innerHeight; refs.camera.aspect=w/h; refs.camera.updateProjectionMatrix(); refs.renderer.setSize(w,h,false); refs.composer.setSize(w,h);}; resize(); window.addEventListener("resize",resize); updateScroll(0);
+    const animate=(time:number)=>{if(refs.disposed)return; const t=time*.001; refs.stars.forEach((s,i)=>{(s.material as THREE.ShaderMaterial).uniforms.time.value=t;s.rotation.z=t*.008*(i+1);}); if(refs.nebula)(refs.nebula.material as THREE.ShaderMaterial).uniforms.time.value=t*.5; if(refs.atmosphere)(refs.atmosphere.material as THREE.ShaderMaterial).uniforms.time.value=t; refs.mountains.forEach((m,i)=>{m.position.x=Math.sin(t*.1+i)*3*(i+1)+pointer.x*(8+i*8);m.position.y=(m.userData.baseY as number)+Math.cos(t*.15+i)*(1+i)+pointer.y*(i+1)*2;}); if(refs.nebula){refs.nebula.position.x=80+Math.sin(t*.12)*28+pointer.x*14;refs.nebula.position.y=30+Math.cos(t*.1)*14+pointer.y*8;} if(refs.atmosphere){refs.atmosphere.position.x=260+Math.sin(t*.16)*24+pointer.x*12;refs.atmosphere.position.y=10+Math.cos(t*.12)*12+pointer.y*8;} refs.camera.position.x+=(refs.target.x+pointer.x*5-refs.camera.position.x)*.045; refs.camera.position.y+=(refs.target.y-pointer.y*3-refs.camera.position.y)*.045; refs.camera.position.z+=(refs.target.z-refs.camera.position.z)*.045; refs.camera.lookAt(pointer.x*12,pointer.y*4,-600); refs.composer?.render(); refs.raf=requestAnimationFrame(animate);}; refs.raf=requestAnimationFrame(animate); setIsReady(true);
+    return()=>{refs.disposed=true;cancelAnimationFrame(refs.raf);refs.scrollTrigger?.kill();window.removeEventListener("pointermove",onPointer);window.removeEventListener("resize",resize);refs.stars.forEach(s=>{s.geometry.dispose();(s.material as THREE.Material).dispose();});refs.mountains.forEach(m=>{m.geometry.dispose();(m.material as THREE.Material).dispose();});if(refs.nebula){refs.nebula.geometry.dispose();(refs.nebula.material as THREE.Material).dispose();}if(refs.atmosphere){refs.atmosphere.geometry.dispose();(refs.atmosphere.material as THREE.Material).dispose();}refs.renderer?.dispose();refs.composer?.dispose();};
   }, []);
 
-  return <div ref={mountRef} className="jawyx-webgl" aria-hidden="true"><canvas ref={canvasRef} /><div className="video-scanline" /><div className="scene-timecode">JX / LIVE RENDER / 60 FPS</div><div className="webgl-progress"><span>SCROLL</span><i><b style={{ width: `${scrollProgress * 100}%` }} /></i><strong>{String(currentSection).padStart(2, "0")} / 06</strong></div></div>;
+  useEffect(() => { if(!isReady)return; const ctx=gsap.context(()=>{if(menuRef.current)gsap.from(menuRef.current,{x:-80,opacity:0,duration:1,ease:"power3.out"}); if(titleRef.current){const chars=titleRef.current.querySelectorAll(".title-char");gsap.from(chars,{y:180,opacity:0,duration:1.25,stagger:.018,ease:"power4.out",delay:.25});} if(subtitleRef.current)gsap.from(subtitleRef.current.querySelectorAll(".subtitle-line"),{y:40,opacity:0,duration:.8,stagger:.14,ease:"power3.out",delay:.8}); if(progressRef.current)gsap.from(progressRef.current,{opacity:0,y:30,duration:.8,delay:1});}); return()=>ctx.revert(); }, [isReady]);
+
+  return <div ref={containerRef} className="hero-container cosmos-style"><canvas ref={canvasRef} className="hero-canvas" /><div ref={menuRef} className="side-menu"><img src={logo} alt="JawyXDevs logo" /><span className="vertical-text">JAWYXDEVS // SYSTEMS</span></div><div className="hero-content cosmos-content"><p className="hero-kicker">ELITE WEB ENGINEERING STUDIO</p><h1 ref={titleRef} className="hero-title">{words.map((word,i)=><span key={`${word}-${i}`} className="title-word">{word.split("").map((char,j)=><span key={`${char}-${j}`} className="title-char">{char}</span>)}{i<words.length-1&&<span className="title-space">&nbsp;</span>}</span>)}</h1><div ref={subtitleRef} className="hero-subtitle cosmos-subtitle"><p className="subtitle-line">Interactive digital systems for brands with ambition.</p><p className="subtitle-line">Premium engineering, motion, and atmosphere in one continuous world.</p></div><div className="hero-actions codebase-actions"><a href="#work" className="button button-primary">VIEW OUR WORK <ArrowUpRight size={16}/></a><a href="#contact" className="button button-ghost">START A PROJECT <ArrowUpRight size={16}/></a></div></div><div ref={progressRef} className="scroll-progress"><span className="scroll-text">SCROLL</span><span className="progress-track"><span className="progress-fill" style={{width:`${scrollProgress*100}%`}}/></span><strong>{String(currentSection).padStart(2,"0")} / 03</strong><ChevronDown size={14}/></div><div className="cosmos-meta">EST. / 2024 <i>TORONTO · WORLDWIDE</i></div></div>;
 }

@@ -1,8 +1,7 @@
-# JawyXDevs Final Visual Overhaul
+# Supplied Hero Codebase Integration
 
-- [x] Audit the current live composition and identify the most visible generic or unfinished areas.
-- [x] Overhaul hero hierarchy, typography, lighting, and integrated WebGL presentation.
-- [x] Improve scroll choreography and section-to-section visual continuity.
-- [x] Make projects the visual centerpiece without using a basic card grid.
-- [x] Refine pricing, principles, contact, footer, and mobile layouts.
-- [x] Test desktop and mobile, inspect runtime logs, and save a final checkpoint.
+- [x] Read the supplied hero codebase in full and map its component, scene, camera, animation, and responsive architecture.
+- [x] Replace the current hero implementation with the supplied structure instead of an approximation.
+- [x] Adapt the supplied hero to JawyXDevs branding, logo, copy, links, and existing page integration.
+- [x] Verify desktop, tablet, mobile, WebGL, scroll, pointer interaction, and visual fidelity against the supplied codebase.
+- [x] Save and deliver the updated checkpoint.

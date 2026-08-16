@@ -1,11 +1,7 @@
 /* JawyXDevs style: cinematic industrial futurism — dark architectural field, metallic type, signal blue rail, purposeful motion. */
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Menu, MoveRight, X } from "lucide-react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 const JawyxWebGLHero = lazy(() => import("@/components/ui/jawyx-webgl-hero").then((module) => ({ default: module.JawyxWebGLHero })));
-gsap.registerPlugin(ScrollTrigger);
 
 const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
 const heroArt = "/manus-storage/jawyx-hero-nebula_f8cd2980.png";
@@ -67,15 +63,6 @@ export default function Home() {
   const projectStageRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => { const onScroll = () => setScrolled(window.scrollY > 40); window.addEventListener("scroll", onScroll); return () => window.removeEventListener("scroll", onScroll); }, []);
   useEffect(() => {
-    const context = gsap.context(() => {
-      const sections = gsap.utils.toArray<HTMLElement>(".reveal-on-scroll");
-      sections.forEach((section) => gsap.fromTo(section, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 1.15, ease: "power4.out", scrollTrigger: { trigger: section, start: "top 82%", once: true } }));
-      gsap.fromTo(".hero-copy > *", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 1.05, stagger: 0.08, delay: 0.2, ease: "power4.out" });
-      gsap.fromTo(".service-row", { opacity: 0, x: -32 }, { opacity: 1, x: 0, duration: .8, stagger: .08, ease: "power3.out", scrollTrigger: { trigger: ".service-list", start: "top 78%", once: true } });
-    });
-    return () => context.revert();
-  }, []);
-  useEffect(() => {
     const stage = projectStageRef.current;
     if (!stage) return;
     const move = (event: PointerEvent) => { const rect = stage.getBoundingClientRect(); const x = ((event.clientX - rect.left) / rect.width - .5) * 2; const y = ((event.clientY - rect.top) / rect.height - .5) * 2; stage.style.setProperty("--tilt-x", `${x * 2.8}deg`); stage.style.setProperty("--tilt-y", `${y * -2.2}deg`); stage.style.setProperty("--art-x", `${x * -1.2}%`); stage.style.setProperty("--art-y", `${y * -1.2}%`); };
@@ -95,9 +82,7 @@ export default function Home() {
 
     <main>
       <section id="home" className="hero" style={{ backgroundImage: "linear-gradient(90deg, rgba(3,5,9,.92) 0%, rgba(3,5,9,.68) 44%, rgba(3,5,9,.2) 100%)" }}>
-        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><div className="hero-grid" aria-hidden="true" />
-        <div className="hero-copy"><div className="hero-mark"><img src={logo} alt="JawyXDevs logo" /><span>JAWYXDEVS <i>//</i> DIGITAL SYSTEMS</span></div><p className="eyebrow reveal"><span className="eyebrow-line" /> Elite web engineering studio</p><h1>Crafting <em>high-performance</em><br /><span>digital experiences</span><br />that scale brands worldwide.</h1><p className="hero-description">We build 3D, responsive, SEO-optimized, ultra-fast web platforms that turn visitors into loyal clients.</p><div className="hero-actions"><button className="button button-primary" onClick={() => jump("work")}>View our work <MoveRight size={17} /></button><button className="button button-ghost" onClick={() => jump("contact")}>Start a project <ArrowUpRight size={16} /></button></div></div>
-        <div className="hero-meta"><span>EST. / 2024</span><span>TORONTO · WORLDWIDE</span></div><button className="scroll-cue" onClick={() => jump("about")}><span>Scroll to explore</span><ChevronDown size={17} /></button>
+        <Suspense fallback={null}><JawyxWebGLHero /></Suspense>
       </section>
 
       <section id="about" className="manifesto section-dark"><div className="section-rail"><span>02</span><span>Manifesto</span></div><div className="manifesto-inner reveal-on-scroll"><p className="eyebrow">The JawyXDevs approach</p><h2>We don't just build websites.<br /><span>We build digital experiences.</span></h2><div className="manifesto-bottom"><p className="large-copy">The web is where your brand proves what it is. We combine modern frontend engineering, intentional interaction, and search-ready architecture to make that proof impossible to miss.</p><div className="capability-list"><span>High-performance development</span><span>Responsive interfaces</span><span>Interactive 3D experiences</span><span>Conversion-focused UX</span></div></div></div></section>
