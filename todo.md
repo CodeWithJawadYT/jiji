@@ -1,7 +1,7 @@
-# WebThreads Background Integration
+# Contact and Work Poster Update
 
-- [ ] Add the WebThreads shader component and required OGL dependency support.
-- [ ] Integrate the purple-pink-white thread background into the existing hero without removing current effects.
-- [ ] Preserve black cinematic contrast, typography, white Antigravity, and #5227FF PixelTrail.
-- [ ] Verify desktop/mobile layering, WebGL cleanup, and production build health.
+- [ ] Inspect existing contact copy, featured artwork, and available logo assets.
+- [ ] Update email to jawyxdevs@gmail.com and phone to 03151082775.
+- [ ] Replace the generic featured Work poster with a selected website/logo treatment.
+- [ ] Verify project links, responsive layout, and production build.
 - [ ] Save and deliver the updated checkpoint.

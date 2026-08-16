@@ -204,3 +204,10 @@ h2 { font-size: clamp(48px, 7.3vw, 106px); line-height: .92; letter-spacing: -.0
 .masonry-intro { display: flex; justify-content: space-between; gap: 18px; margin: 45px 0 16px; padding-top: 15px; border-top: 1px solid var(--line); color: #74818c; font: 9px 'IBM Plex Mono', monospace; letter-spacing: .13em; text-transform: uppercase; }
 .masonry-intro span:last-child { color: var(--signal); }
 @media (max-width: 600px) { .masonry-intro { flex-direction: column; gap: 7px; margin-top: 32px; } }
+
+/* JawyXDevs style: selected website logo poster treatment and direct contact details. */
+.project-stage:has(.selected-logo-poster) { background: radial-gradient(circle at 50% 42%, rgba(82,39,255,.24), transparent 30%), linear-gradient(135deg, #080a12, #111526 58%, #05070a); }
+.project-stage .selected-logo-poster { object-fit: contain; padding: clamp(80px, 13vw, 170px); filter: saturate(.8) brightness(1.18) drop-shadow(0 0 42px rgba(82,39,255,.34)); transform: scale(.92); transition: transform .7s cubic-bezier(.23,1,.32,1), filter .5s ease; }
+.project-stage:hover .selected-logo-poster { transform: scale(1); filter: saturate(1) brightness(1.25) drop-shadow(0 0 70px rgba(82,39,255,.52)); }
+.contact-phone { margin-top: 12px; }
+@media (max-width: 600px) { .project-stage .selected-logo-poster { padding: 75px; } }
