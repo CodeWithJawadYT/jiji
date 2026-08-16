@@ -1,7 +1,7 @@
-# Supplied Hero Codebase Integration
+# Scroll Zoom Camera Upgrade
 
-- [x] Read the supplied hero codebase in full and map its component, scene, camera, animation, and responsive architecture.
-- [x] Replace the current hero implementation with the supplied structure instead of an approximation.
-- [x] Adapt the supplied hero to JawyXDevs branding, logo, copy, links, and existing page integration.
-- [x] Verify desktop, tablet, mobile, WebGL, scroll, pointer interaction, and visual fidelity against the supplied codebase.
+- [x] Audit the supplied hero camera path and current scroll interpolation.
+- [x] Add a clear scroll-linked camera push-in with depth and focal-length choreography.
+- [x] Tune the effect for mobile and reduced-motion users.
+- [x] Verify scroll behavior, build health, and visual result.
 - [x] Save and deliver the updated checkpoint.
