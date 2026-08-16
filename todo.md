@@ -1,8 +1,8 @@
-# Realistic Alpine Terrain Upgrade
+# Realistic Alpine Mountain Replacement
 
-- [x] Audit the current terrain geometry, snow coverage, and lighting limitations.
-- [x] Replace the low-poly terrain with detailed heightmap-style alpine geometry and layered rock/snow materials.
-- [x] Add natural ridge variation, erosion detail, uneven snow accumulation, and multi-layer depth.
-- [x] Tune cold daylight lighting, atmospheric perspective, fog/mist, and restrained snowfall.
-- [x] Optimize desktop/mobile geometry and verify the existing camera journey and UI remain unchanged.
+- [x] Audit the current mountain-only implementation and preserve the existing camera/UI boundary.
+- [x] Replace the current procedural terrain with denser layered heightmap-style alpine geometry.
+- [x] Improve rock/snow material variation, sharp ridge silhouettes, and natural erosion detail.
+- [x] Add cinematic cold lighting, realistic shadows, atmospheric depth, and inter-mountain mist.
+- [x] Verify the existing UI, scroll camera journey, projects, pricing, and mobile path remain unchanged.
 - [x] Save and deliver the updated checkpoint.

@@ -143,8 +143,21 @@ export function JawyxWebGLHero() {
       const geometry = new THREE.BufferGeometry(); geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3)); geometry.setIndex(indices); geometry.computeVertexNormals();
       const material = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: .1, roughness: .92, flatShading: false, side: THREE.DoubleSide });
       const mesh = new THREE.Mesh(geometry, material); refs.scene.add(mesh); refs.terrain.push(mesh);
-      const createLayer = (scale: number, z: number, tint: number, opacity: number, seed: number) => { const shape: THREE.Vector2[] = []; for (let i = 0; i <= 52; i += 1) { const t = i / 52; const x = (t - .5) * 1500 * scale; const y = -72 + noise(t * 7 + seed, seed) * 48 + Math.sin(t * 10 + seed) * 32 + Math.pow(Math.sin(t * Math.PI), 1.5) * 85; shape.push(new THREE.Vector2(x, y)); } shape.push(new THREE.Vector2(1600 * scale, -250), new THREE.Vector2(-1600 * scale, -250)); const layerGeometry = new THREE.ShapeGeometry(new THREE.Shape(shape)); const layerMaterial = new THREE.MeshStandardMaterial({ color: tint, transparent: true, opacity, roughness: .98, metalness: .05, side: THREE.DoubleSide, depthWrite: false }); const layer = new THREE.Mesh(layerGeometry, layerMaterial); layer.position.z = z; refs.scene.add(layer); refs.terrain.push(layer); };
-      createLayer(1.28, -220, 0x9db8c8, .78, 3); createLayer(1.55, -520, 0x718fa3, .58, 7); createLayer(1.9, -980, 0x4f6c7d, .38, 13);
+      const createDistantLayer = (scale: number, zOffset: number, seed: number, colorA: number, colorB: number) => {
+        const layerX = mobile ? 38 : 58;
+        const layerZ = mobile ? 34 : 54;
+        const layerCols = layerX + 1;
+        const vertices = new Float32Array(layerCols * (layerZ + 1) * 3);
+        const vertexColors = new Float32Array(layerCols * (layerZ + 1) * 3);
+        const layerNoise = (x: number, z: number) => noise(x * scale + seed, z * scale * .72 - seed);
+        const colorDark = new THREE.Color(colorA); const colorLight = new THREE.Color(colorB);
+        for (let z = 0; z <= layerZ; z += 1) { const nz = z / layerZ; for (let x = 0; x <= layerX; x += 1) { const nx = x / layerX - .5; const index = (z * layerCols + x) * 3; const mountain = Math.max(0, 1 - Math.abs(nx * 1.7 + layerNoise(nx * 2, nz) * .34)); const sharp = Math.pow(mountain, 1.8) * (58 + Math.abs(layerNoise(nx * 7, nz * 4)) * 45); const folds = layerNoise(nx * 9, nz * 3) * 15; vertices[index] = nx * 2300 * scale; vertices[index + 1] = -98 + sharp + folds; vertices[index + 2] = 180 - nz * 1500 + zOffset; const snow = THREE.MathUtils.clamp((vertices[index + 1] + 55) / 90 + (1 - Math.min(1, Math.abs(folds) / 15)) * .22, 0, 1); const c = colorDark.clone().lerp(colorLight, snow); vertexColors[index] = c.r; vertexColors[index + 1] = c.g; vertexColors[index + 2] = c.b; } }
+        const layerIndices: number[] = []; for (let z = 0; z < layerZ; z += 1) for (let x = 0; x < layerX; x += 1) { const a = z * layerCols + x; const b = a + 1; const c = a + layerCols; const d = c + 1; layerIndices.push(a, c, b, b, c, d); }
+        const layerGeometry = new THREE.BufferGeometry(); layerGeometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3)); layerGeometry.setAttribute("color", new THREE.BufferAttribute(vertexColors, 3)); layerGeometry.setIndex(layerIndices); layerGeometry.computeVertexNormals();
+        const layerMaterial = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .96, metalness: .04, transparent: true, opacity: .86, side: THREE.DoubleSide });
+        const layerMesh = new THREE.Mesh(layerGeometry, layerMaterial); refs.scene.add(layerMesh); refs.terrain.push(layerMesh);
+      };
+      createDistantLayer(1.18, -320, 4, 0x4e6673, 0xb8d0dc); createDistantLayer(1.52, -760, 11, 0x334b59, 0x8caab9); createDistantLayer(1.92, -1250, 19, 0x203743, 0x5f7d8c); const alpineBackdrop = new THREE.Mesh(new THREE.PlaneGeometry(3600, 1700, 1, 1), new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("/manus-storage/jawyx-alpine-distant-bg_85a8b8b1.png", texture => { texture.colorSpace = THREE.SRGBColorSpace; }), transparent: true, opacity: .72, depthWrite: false, fog: true })); alpineBackdrop.position.set(0, 180, -1680); refs.scene.add(alpineBackdrop); refs.terrain.push(alpineBackdrop);
     };
     const createAtmosphere = () => {
       const geometry = new THREE.SphereGeometry(mobile ? 360 : 560, mobile ? 22 : 36, mobile ? 16 : 24);
