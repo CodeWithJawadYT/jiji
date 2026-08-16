@@ -2,6 +2,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Menu, MoveRight, X } from "lucide-react";
 const JawyxWebGLHero = lazy(() => import("@/components/ui/jawyx-webgl-hero").then((module) => ({ default: module.JawyxWebGLHero })));
+import { PixelTrail } from "@/components/ui/pixel-trail";
 
 const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
 const heroArt = "/manus-storage/jawyx-hero-nebula_f8cd2980.png";
@@ -82,7 +83,7 @@ export default function Home() {
 
     <main>
       <section id="home" className="hero" style={{ backgroundColor: "#000000" }}>
-        <Suspense fallback={null}><JawyxWebGLHero /></Suspense>
+        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><PixelTrail gridSize={46} trailSize={0.11} maxAge={340} interpolate={5} color="#dff6ff" />
       </section>
 
       <section id="about" className="manifesto section-dark"><div className="section-rail"><span>02</span><span>Manifesto</span></div><div className="manifesto-inner reveal-on-scroll"><p className="eyebrow">The JawyXDevs approach</p><h2>We don't just build websites.<br /><span>We build digital experiences.</span></h2><div className="manifesto-bottom"><p className="large-copy">The web is where your brand proves what it is. We combine modern frontend engineering, intentional interaction, and search-ready architecture to make that proof impossible to miss.</p><div className="capability-list"><span>High-performance development</span><span>Responsive interfaces</span><span>Interactive 3D experiences</span><span>Conversion-focused UX</span></div></div></div></section>

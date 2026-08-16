@@ -1,0 +1,13 @@
+/* JawyXDevs style: PixelTrail is a restrained signal layer over a pure-black hero. */
+.pixel-trail-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: .5;
+  mix-blend-mode: screen;
+}
+.pixel-canvas { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; pointer-events: auto; }
+.pixel-goo-filter-container { position: absolute; width: 0; height: 0; overflow: hidden; }
+@media (max-width: 700px) { .pixel-trail-layer { opacity: .28; } }
+@media (prefers-reduced-motion: reduce) { .pixel-trail-layer { opacity: .16; } }
