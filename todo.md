@@ -1,6 +1,7 @@
-# Exact Uploaded Mountain Image
+# Realistic Snowy Background Replacement
 
-- [x] Copy the exact uploaded mountain image into the webdev asset staging area and upload it for deployment.
-- [x] Replace the generated/recreated alpine backdrop URL with the exact uploaded image URL.
-- [x] Preserve the existing WebGL terrain, scroll camera, UI, sections, projects, and pricing.
-- [x] Verify desktop/mobile rendering and runtime health, then save the checkpoint.
+- [x] Audit the current mountain background layer and keep all non-background code unchanged.
+- [x] Add a new realistic cinematic snowy alpine background inspired by the uploaded reference without copying it.
+- [x] Replace the current artificial background layer only.
+- [x] Verify logo, text, layout, sections, animations, projects, pricing, navigation, and responsive behavior remain unchanged.
+- [x] Save and deliver the updated checkpoint.
