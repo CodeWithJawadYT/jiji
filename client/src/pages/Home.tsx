@@ -1,6 +1,8 @@
 /* JawyXDevs style: cinematic industrial futurism — dark architectural field, metallic type, signal blue rail, purposeful motion. */
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Menu, MoveRight, X } from "lucide-react";
+
+const JawyxWebGLHero = lazy(() => import("@/components/ui/jawyx-webgl-hero").then((module) => ({ default: module.JawyxWebGLHero })));
 
 const logo = "/manus-storage/Jawy.devs_7c146be2.jpg";
 const heroArt = "/manus-storage/jawyx-hero-nebula_f8cd2980.png";
@@ -73,7 +75,7 @@ export default function Home() {
 
     <main>
       <section id="home" className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(3,5,9,.92) 0%, rgba(3,5,9,.72) 44%, rgba(3,5,9,.16) 100%), url(${heroArt})` }}>
-        <ParticleField /><div className="hero-grid" aria-hidden="true" /><div className="hero-orbit" aria-hidden="true"><img src={companionMark} alt="" /></div>
+        <Suspense fallback={null}><JawyxWebGLHero /></Suspense><div className="hero-grid" aria-hidden="true" /><div className="hero-orbit" aria-hidden="true"><img src={companionMark} alt="" /></div>
         <div className="hero-copy"><p className="eyebrow reveal"><span className="eyebrow-line" /> Elite web engineering studio</p><h1>Crafting <em>high-performance</em><br /><span>digital experiences</span><br />that scale brands worldwide.</h1><p className="hero-description">We build 3D, responsive, SEO-optimized, ultra-fast web platforms that turn visitors into loyal clients.</p><div className="hero-actions"><button className="button button-primary" onClick={() => jump("work")}>View our work <MoveRight size={17} /></button><button className="button button-ghost" onClick={() => jump("contact")}>Start a project <ArrowUpRight size={16} /></button></div></div>
         <div className="hero-meta"><span>EST. / 2024</span><span>TORONTO · WORLDWIDE</span><span>01 <span className="muted">/ 06</span></span></div><button className="scroll-cue" onClick={() => jump("about")}><span>Scroll to explore</span><ChevronDown size={17} /></button>
       </section>
