@@ -1,6 +1,6 @@
-# GitHub Pages Deployment Repair
+# GitHub Pages Route Repair
 
-- [ ] Inspect recent GitHub Actions runs, workflow files, and Pages configuration.
-- [ ] Identify and fix the deployment or push failure.
-- [ ] Re-run and verify the actual GitHub Pages deployment.
-- [ ] Save and deliver the verified repair.
+- [ ] Inspect Wouter routing and the /jiji/ repository-path behavior.
+- [ ] Add GitHub Pages base-path compatibility without breaking Manus hosting.
+- [ ] Build and verify /jiji/ opens the JawyXDevs home experience.
+- [ ] Save and deliver the route repair.
