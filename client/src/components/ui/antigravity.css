@@ -1,5 +1,5 @@
 /* JawyXDevs style: dark visible Antigravity signal field, kept subordinate to the hero typography. */
 .antigravity-layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .58; mix-blend-mode: screen; }
-.antigravity-layer canvas { display: block; width: 100% !important; height: 100% !important; pointer-events: auto; }
+.antigravity-layer canvas { display: block; width: 100% !important; height: 100% !important; pointer-events: none; }
 @media (max-width: 700px) { .antigravity-layer { opacity: .32; } }
 @media (prefers-reduced-motion: reduce) { .antigravity-layer { opacity: .18; } }

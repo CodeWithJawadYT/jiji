@@ -1,7 +1,7 @@
-# Contact and Work Poster Update
+# Hero CTA Navigation Fix
 
-- [ ] Inspect existing contact copy, featured artwork, and available logo assets.
-- [ ] Update email to jawyxdevs@gmail.com and phone to 03151082775.
-- [ ] Replace the generic featured Work poster with a selected website/logo treatment.
-- [ ] Verify project links, responsive layout, and production build.
+- [ ] Trace the hero CTA markup and navigation handler.
+- [ ] Make View Our Work scroll to #work.
+- [ ] Make Start a Project scroll to #contact.
+- [ ] Verify desktop and mobile click behavior and build health.
 - [ ] Save and deliver the updated checkpoint.
