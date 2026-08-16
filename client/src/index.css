@@ -190,7 +190,7 @@ h2 { font-size: clamp(48px, 7.3vw, 106px); line-height: .92; letter-spacing: -.0
 .mountain-title-space { display: inline-block; }
 .mountain-subtitle { margin-top: 28px; color: #aab7c1; font-size: 14px; line-height: 1.55; }
 .mountain-subtitle-line { margin: 0; }
-.mountain-actions { display: flex; gap: 11px; margin-top: 26px; pointer-events: auto; }
+.mountain-actions { position: relative; z-index: 20; display: flex; gap: 11px; margin-top: 26px; pointer-events: auto; } .mountain-actions button { cursor: pointer; }
 .mountain-progress { position: absolute; z-index: 4; right: clamp(22px, 5vw, 80px); bottom: 28px; display: flex; align-items: center; gap: 12px; color: #95a4b0; font: 9px 'IBM Plex Mono', monospace; letter-spacing: .15em; text-transform: uppercase; }
 .mountain-progress i { width: 108px; height: 1px; overflow: hidden; background: rgba(218,231,240,.22); }
 .mountain-progress b { display: block; height: 100%; background: var(--signal); transition: width .2s linear; }
