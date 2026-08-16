@@ -24,6 +24,7 @@ type JourneyRefs = {
   stars: THREE.Points[];
   terrain: THREE.Mesh[];
   structures: THREE.Object3D[];
+  snow: THREE.Points | null;
   atmosphere: THREE.Mesh | null;
   nebula: THREE.Mesh | null;
   path: THREE.CatmullRomCurve3;
@@ -67,6 +68,7 @@ export function JawyxWebGLHero() {
       stars: [],
       terrain: [],
       structures: [],
+      snow: null,
       atmosphere: null,
       nebula: null,
       path,
@@ -76,7 +78,7 @@ export function JawyxWebGLHero() {
       raf: 0,
       disposed: false,
     };
-    refs.scene.fog = new THREE.FogExp2(0x02070d, mobile ? 0.0007 : 0.00038);
+    refs.scene.fog = new THREE.FogExp2(0xc7dce8, mobile ? 0.00055 : 0.00028);
     refs.camera.position.copy(refs.target);
 
     try {
@@ -120,6 +122,7 @@ export function JawyxWebGLHero() {
       }
     };
 
+    const createSnowfall = () => { const count = mobile ? 150 : 520; const positions = new Float32Array(count * 3); const sizes = new Float32Array(count); for (let i = 0; i < count; i += 1) { positions[i * 3] = (Math.random() - .5) * 980; positions[i * 3 + 1] = Math.random() * 360 - 80; positions[i * 3 + 2] = 260 - Math.random() * 2900; sizes[i] = .8 + Math.random() * 1.7; } const geometry = new THREE.BufferGeometry(); geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3)); geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1)); const material = new THREE.PointsMaterial({ color: 0xf5fbff, size: mobile ? 1.8 : 2.4, transparent: true, opacity: .62, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }); refs.snow = new THREE.Points(geometry, material); refs.scene.add(refs.snow); };
     const createTerrain = () => {
       const width = mobile ? 1200 : 1900;
       const depth = mobile ? 2700 : 4000;
@@ -144,7 +147,7 @@ export function JawyxWebGLHero() {
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
       geometry.setIndex(indices); geometry.computeVertexNormals();
-      const material = new THREE.MeshStandardMaterial({ color: 0x0b1722, metalness: 0.72, roughness: 0.88, emissive: 0x03182a, emissiveIntensity: 0.22, flatShading: true, side: THREE.DoubleSide });
+      const material = new THREE.MeshStandardMaterial({ color: 0xeaf4f8, metalness: 0.28, roughness: 0.82, emissive: 0x8eacc4, emissiveIntensity: 0.28, flatShading: true, side: THREE.DoubleSide });
       const mesh = new THREE.Mesh(geometry, material); refs.scene.add(mesh); refs.terrain.push(mesh);
 
       const ridge = (side: number, color: number, opacity: number, scale: number) => {
@@ -155,12 +158,12 @@ export function JawyxWebGLHero() {
         const ridgeMaterial = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, side: THREE.DoubleSide, depthWrite: false });
         const ridgeMesh = new THREE.Mesh(ridgeGeometry, ridgeMaterial); ridgeMesh.position.z = -180; ridgeMesh.scale.setScalar(scale); refs.scene.add(ridgeMesh); refs.terrain.push(ridgeMesh);
       };
-      ridge(-1, 0x07111c, 0.96, 1.4); ridge(1, 0x0a2034, 0.88, 1.25); ridge(-1, 0x0b3c60, 0.44, 1.05); ridge(1, 0x0b527c, 0.36, 1.02);
+      ridge(-1, 0xeaf4f8, 0.96, 1.4); ridge(1, 0xc5dce8, 0.9, 1.25); ridge(-1, 0xa8c9dc, 0.52, 1.05); ridge(1, 0x82abc5, 0.42, 1.02);
     };
 
     const createAtmosphere = () => {
       const geometry = new THREE.SphereGeometry(mobile ? 360 : 560, mobile ? 22 : 36, mobile ? 16 : 24);
-      const material = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 } }, vertexShader: `varying vec3 n; void main(){n=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`, fragmentShader: `varying vec3 n; uniform float time; void main(){float edge=pow(.72-dot(n,vec3(0.,0.,1.)),2.3); float pulse=.88+sin(time*1.5)*.08; vec3 c=vec3(.02,.26,.88)*edge*pulse; gl_FragColor=vec4(c,edge*.3);}`, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+      const material = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 } }, vertexShader: `varying vec3 n; void main(){n=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`, fragmentShader: `varying vec3 n; uniform float time; void main(){float edge=pow(.72-dot(n,vec3(0.,0.,1.)),2.3); float pulse=.88+sin(time*1.5)*.08; vec3 c=vec3(.22,.62,1.)*edge*pulse; gl_FragColor=vec4(c,edge*.25);}`, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
       refs.atmosphere = new THREE.Mesh(geometry, material); refs.atmosphere.position.set(210, 55, -720); refs.scene.add(refs.atmosphere);
       const nebulaGeometry = new THREE.PlaneGeometry(1600, 900, 32, 18);
       const nebulaMaterial = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 }, colorA: { value: new THREE.Color(0x02152a) }, colorB: { value: new THREE.Color(0x159dff) } }, vertexShader: `varying vec2 uv0; uniform float time; void main(){uv0=uv; vec3 p=position; p.z+=sin(p.x*.012+time*.4)*18.; gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`, fragmentShader: `varying vec2 uv0; uniform vec3 colorA; uniform vec3 colorB; uniform float time; void main(){float f=sin(uv0.x*8.+time)*cos(uv0.y*7.-time*.4)*.5+.5; float e=1.-smoothstep(.05,.78,length(uv0-.5)); gl_FragColor=vec4(mix(colorA,colorB,f),e*.16);}`, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -183,10 +186,10 @@ export function JawyxWebGLHero() {
       }
     };
 
-    createStars(); createTerrain(); createAtmosphere(); createStructures();
-    const blue = new THREE.PointLight(0x159dff, 7, 780); blue.position.set(180, 120, -320); refs.scene.add(blue);
-    const silver = new THREE.PointLight(0xd7e7f1, 2.4, 540); silver.position.set(-180, 160, 80); refs.scene.add(silver);
-    refs.scene.add(new THREE.AmbientLight(0x527089, 1.15));
+    createStars(); createSnowfall(); createTerrain(); createAtmosphere(); createStructures();
+    const blue = new THREE.PointLight(0x8ed8ff, 5.5, 780); blue.position.set(180, 120, -320); refs.scene.add(blue);
+    const silver = new THREE.PointLight(0xf4fbff, 4.2, 540); silver.position.set(-180, 160, 80); refs.scene.add(silver);
+    refs.scene.add(new THREE.AmbientLight(0xb8d4e3, 1.55));
 
     const pointer = { x: 0, y: 0 };
     const onPointer = (event: PointerEvent) => { if (!mobile) { pointer.x = (event.clientX / window.innerWidth - 0.5) * 2; pointer.y = (event.clientY / window.innerHeight - 0.5) * 2; } };
@@ -201,7 +204,7 @@ export function JawyxWebGLHero() {
       if (refs.disposed) return;
       const t = time * 0.001;
       refs.stars.forEach((star, index) => { (star.material as THREE.ShaderMaterial).uniforms.time.value = t; star.rotation.z = t * 0.006 * (index + 1); });
-      refs.terrain.forEach((terrain, index) => { terrain.position.x = Math.sin(t * 0.08 + index) * (2 + index); terrain.rotation.z = Math.sin(t * 0.05 + index) * 0.002; });
+      refs.terrain.forEach((terrain, index) => { terrain.position.x = Math.sin(t * 0.08 + index) * (2 + index); terrain.rotation.z = Math.sin(t * 0.05 + index) * 0.002; }); if (refs.snow) { refs.snow.position.y = -((t * 7) % 250); refs.snow.position.x = Math.sin(t * .18) * 12; refs.snow.rotation.y = t * .015; }
       refs.structures.forEach((structure, index) => { structure.rotation.y = Math.sin(t * 0.3 + index) * 0.16; structure.position.y = Math.sin(t * 0.4 + index) * 1.5; });
       if (refs.atmosphere) { (refs.atmosphere.material as THREE.ShaderMaterial).uniforms.time.value = t; refs.atmosphere.position.x = 210 + Math.sin(t * 0.12) * 30 + pointer.x * 18; refs.atmosphere.position.y = 55 + Math.cos(t * 0.12) * 16 + pointer.y * 10; }
       if (refs.nebula) { (refs.nebula.material as THREE.ShaderMaterial).uniforms.time.value = t * 0.5; refs.nebula.position.x = 120 + Math.sin(t * 0.1) * 34 + pointer.x * 18; refs.nebula.position.y = 70 + Math.cos(t * 0.12) * 16 + pointer.y * 9; }
@@ -211,10 +214,10 @@ export function JawyxWebGLHero() {
     };
     refs.raf = requestAnimationFrame(animate); setReady(true);
 
-    return () => { refs.disposed = true; cancelAnimationFrame(refs.raf); refs.scrollTrigger?.kill(); window.removeEventListener("pointermove", onPointer); window.removeEventListener("resize", resize); refs.stars.forEach(star => { star.geometry.dispose(); (star.material as THREE.Material).dispose(); }); refs.terrain.forEach(terrain => { terrain.geometry.dispose(); (terrain.material as THREE.Material).dispose(); }); refs.structures.forEach(structure => structure.traverse(object => { if (object instanceof THREE.Mesh) { object.geometry.dispose(); (object.material as THREE.Material).dispose(); } })); if (refs.atmosphere) { refs.atmosphere.geometry.dispose(); (refs.atmosphere.material as THREE.Material).dispose(); } if (refs.nebula) { refs.nebula.geometry.dispose(); (refs.nebula.material as THREE.Material).dispose(); } refs.renderer?.dispose(); refs.composer?.dispose(); };
+    return () => { refs.disposed = true; cancelAnimationFrame(refs.raf); refs.scrollTrigger?.kill(); window.removeEventListener("pointermove", onPointer); window.removeEventListener("resize", resize);       refs.stars.forEach(star => { star.geometry.dispose(); (star.material as THREE.Material).dispose(); }); if (refs.snow) { refs.snow.geometry.dispose(); (refs.snow.material as THREE.Material).dispose(); } refs.terrain.forEach(terrain => { terrain.geometry.dispose(); (terrain.material as THREE.Material).dispose(); }); refs.structures.forEach(structure => structure.traverse(object => { if (object instanceof THREE.Mesh) { object.geometry.dispose(); (object.material as THREE.Material).dispose(); } })); if (refs.atmosphere) { refs.atmosphere.geometry.dispose(); (refs.atmosphere.material as THREE.Material).dispose(); } if (refs.nebula) { refs.nebula.geometry.dispose(); (refs.nebula.material as THREE.Material).dispose(); } refs.renderer?.dispose(); refs.composer?.dispose(); };
   }, []);
 
   useEffect(() => { if (!ready) return; const context = gsap.context(() => { if (titleRef.current) gsap.from(titleRef.current.querySelectorAll(".mountain-title-char"), { y: 150, opacity: 0, duration: 1.25, stagger: 0.018, ease: "power4.out" }); if (subtitleRef.current) gsap.from(subtitleRef.current.querySelectorAll(".mountain-subtitle-line"), { y: 36, opacity: 0, duration: 0.85, stagger: 0.12, delay: 0.7, ease: "power3.out" }); if (progressRef.current) gsap.from(progressRef.current, { y: 30, opacity: 0, duration: 0.8, delay: 1 }); }); return () => context.revert(); }, [ready]);
 
-  return <div ref={mountRef} className="mountain-journey"><canvas ref={canvasRef} className="mountain-canvas" aria-hidden="true" /><div className="mountain-side"><img src={logo} alt="JawyXDevs logo" /><span>JAWYXDEVS // DIGITAL SYSTEMS</span></div><div className="mountain-copy"><p className="mountain-kicker">ELITE WEB ENGINEERING STUDIO</p><h1 ref={titleRef}>{title.split(" ").map((word, index) => <span className={`mountain-title-word mountain-word-${index}`} key={`${word}-${index}`}>{word.split("").map((char, charIndex) => <span className="mountain-title-char" key={`${char}-${charIndex}`}>{char}</span>)}<span className="mountain-title-space">&nbsp;</span></span>)}</h1><div ref={subtitleRef} className="mountain-subtitle"><p className="mountain-subtitle-line">Stand at the summit of a digital world built to move.</p><p className="mountain-subtitle-line">Scroll to descend through the JawyXDevs experience.</p></div><div className="mountain-actions"><a className="button button-primary" href="#work">VIEW OUR WORK <ArrowUpRight size={16} /></a><a className="button button-ghost" href="#contact">START A PROJECT <ArrowUpRight size={16} /></a></div></div><div ref={progressRef} className="mountain-progress"><span>DESCEND</span><i><b style={{ width: `${progress * 100}%` }} /></i><strong>{String(section).padStart(2, "0")} / 05</strong><ChevronDown size={14} /></div><div className="mountain-meta">SUMMIT / 00 <span>TORONTO · WORLDWIDE</span></div></div>;
+  return <div ref={mountRef} className="mountain-journey"><canvas ref={canvasRef} className="mountain-canvas" aria-hidden="true" /><div className="mountain-side" style={{ opacity: Math.max(0, 1 - progress * 14) }}><img src={logo} alt="JawyXDevs logo" /><span>JAWYXDEVS // DIGITAL SYSTEMS</span></div><div className="mountain-copy" style={{ opacity: Math.max(0, 1 - progress * 14) }}><p className="mountain-kicker">ELITE WEB ENGINEERING STUDIO</p><h1 ref={titleRef}>{title.split(" ").map((word, index) => <span className={`mountain-title-word mountain-word-${index}`} key={`${word}-${index}`}>{word.split("").map((char, charIndex) => <span className="mountain-title-char" key={`${char}-${charIndex}`}>{char}</span>)}<span className="mountain-title-space">&nbsp;</span></span>)}</h1><div ref={subtitleRef} className="mountain-subtitle"><p className="mountain-subtitle-line">Stand at the summit of a digital world built to move.</p><p className="mountain-subtitle-line">Scroll to descend through the JawyXDevs experience.</p></div><div className="mountain-actions"><a className="button button-primary" href="#work">VIEW OUR WORK <ArrowUpRight size={16} /></a><a className="button button-ghost" href="#contact">START A PROJECT <ArrowUpRight size={16} /></a></div></div><div ref={progressRef} className="mountain-progress"><span>DESCEND</span><i><b style={{ width: `${progress * 100}%` }} /></i><strong>{String(section).padStart(2, "0")} / 05</strong><ChevronDown size={14} /></div><div className="mountain-meta">SUMMIT / 00 <span>TORONTO · WORLDWIDE</span></div></div>;
 }

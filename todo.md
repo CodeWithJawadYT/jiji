@@ -1,8 +1,7 @@
-# Cinematic Mountain Journey
+# Snowy Mountain Focused Update
 
-- [x] Read pasted_content_10.txt and audit the current WebGL implementation.
-- [x] Build a procedural futuristic mountain terrain with summit start and lower-mountain depth.
-- [x] Replace the current scroll path with a curved 3D camera route driven by GSAP and ScrollTrigger.
-- [x] Coordinate fog, particles, atmosphere, glowing technology elements, and progress telemetry with camera travel.
-- [x] Preserve JawyXDevs branding, projects, pricing, and mobile optimization.
-- [x] Test the actual scroll journey, build/runtime health, and save a checkpoint.
+- [x] Audit the current decorative scene text and mountain material setup.
+- [x] Make decorative scene text fade out smoothly when scrolling begins.
+- [x] Convert terrain and mountain layers to white snow with icy-blue shadows.
+- [x] Add subtle snowfall, soft mist, and cinematic snowy lighting without changing the camera journey.
+- [x] Verify desktop/mobile rendering, build health, and save a checkpoint.
