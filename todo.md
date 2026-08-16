@@ -1,8 +1,7 @@
-# Cinematic Alpine Environment Replacement
+# Uploaded Alpine Reference Alignment
 
-- [x] Audit the current mountain-only scene and preserve the existing site/UI/camera boundary.
-- [x] Replace the current mountain concept with massive snowy peaks, deep valleys, rocky cliffs, and multiple distant layers.
-- [x] Add natural snow/rock shading, realistic shadows, soft cloud/mist depth, and cold cinematic daylight.
-- [x] Strengthen the scroll camera path so it flies through the alpine environment instead of only descending over it.
-- [x] Verify projects, pricing, UI, mobile behavior, Three.js architecture, and runtime health remain intact.
-- [x] Save and deliver the updated checkpoint.
+- [x] Audit the existing mountain-only scene against the uploaded reference’s peak shape, snow, lighting, and depth.
+- [x] Create a new reference-directed alpine background treatment without copying the source image.
+- [x] Align foreground terrain, distant layers, haze, and cold daylight to the reference direction.
+- [x] Preserve the summit-to-valley camera journey and responsive Three.js behavior.
+- [x] Verify the unchanged JawyXDevs UI, sections, projects, and pricing, then save the checkpoint.
