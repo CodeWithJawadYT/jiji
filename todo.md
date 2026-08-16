@@ -1,7 +1,6 @@
-# Uploaded Alpine Reference Alignment
+# Exact Uploaded Mountain Image
 
-- [x] Audit the existing mountain-only scene against the uploaded reference’s peak shape, snow, lighting, and depth.
-- [x] Create a new reference-directed alpine background treatment without copying the source image.
-- [x] Align foreground terrain, distant layers, haze, and cold daylight to the reference direction.
-- [x] Preserve the summit-to-valley camera journey and responsive Three.js behavior.
-- [x] Verify the unchanged JawyXDevs UI, sections, projects, and pricing, then save the checkpoint.
+- [x] Copy the exact uploaded mountain image into the webdev asset staging area and upload it for deployment.
+- [x] Replace the generated/recreated alpine backdrop URL with the exact uploaded image URL.
+- [x] Preserve the existing WebGL terrain, scroll camera, UI, sections, projects, and pricing.
+- [x] Verify desktop/mobile rendering and runtime health, then save the checkpoint.
